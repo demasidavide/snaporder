@@ -1,5 +1,19 @@
 @import '../../variables/variables.css';
 
-h1{
-    color: var(--primary-color);
+.container-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    width: 80vw;
+    background-color: var(--header);
+    position: absolute;
+    border:solid 2px red;
+    margin-top: 30%;
+    left: 10%;
+
+}
+
+.login{
+    background-color: var(--header);
 }
