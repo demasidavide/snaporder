@@ -1,19 +1,64 @@
-@import '../../variables/variables.css';
+@import "../../variables/variables.css";
 
-.container-form{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-    width: 80vw;
-    background-color: var(--header);
-    position: absolute;
-    border:solid 2px red;
-    margin-top: 30%;
-    left: 10%;
-
+.container-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 80vw;
+  background-color: var(--header);
+  position: absolute;
+  margin-top: 30%;
+  left: 10%;
 }
 
-.login{
-    background-color: var(--header);
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--header);
+}
+.logo {
+  width: 150px;
+  height: 150px;
+}
+.title {
+  color: var(--neutral);
+  font-weight: bold;
+}
+.text {
+  margin-top: 50px;
+  width: 300px;
+}
+.text label {
+  color: var(--neutral); /* Colore del testo dell'etichetta */
+}
+.text .MuiOutlinedInput-root {
+  color: var(
+    --neutral
+  ); /* Usa una variabile esistente o un colore fisso come #ff0000 */
+}
+
+.text .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Colore del bordo */
+}
+
+.text .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Bordo al hover */
+}
+
+.text .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Bordo quando focalizzato */
+}
+.submit {
+  width: 300px;
+  background-color: var(--focus);
+  color: var(--neutral);
+  font-weight: bold;
+  margin-top: 20px !important;
+}
+.or{
+    margin: 20px;
+    color: var(--neutral);
 }
