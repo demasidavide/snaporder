@@ -1,1 +1,13 @@
-@import '../../variables/variables.css';
+@import "../../variables/variables.css";
+
+.add {
+  position: fixed;
+  margin: 10px 0px !important;
+  left: 85%;
+}
+.type{
+    color:var(--neutral) !important;
+}
+.type-selected{
+    color:var(--confirm) !important;
+}

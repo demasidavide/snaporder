@@ -1,6 +1,7 @@
 import "./Home.css";
 import Navbar from "../../components/navbar/Navbar";
 import CardTable from "../../components/cardTable/CardTable";
+import ProductList from "../../components/productList/ProductList";
 import { useState } from "react";
 
 function Home() {
@@ -9,15 +10,19 @@ function Home() {
   return (
     <>
       <Navbar selectArea={selectArea} setSelectArea={setSelectArea}></Navbar>
-    <div className="container-main">
-    <CardTable></CardTable>
-    <CardTable></CardTable>
-    
-
-    </div>
-
-
-
+      <div className="container-main">
+        {selectArea === "Tavoli" && (
+          <>
+            <CardTable></CardTable>
+            <CardTable></CardTable>
+          </>
+        )}
+        {selectArea === "Prodotti" && (
+            <>
+            <ProductList></ProductList>
+            </>
+        )}
+      </div>
     </>
   );
 }
