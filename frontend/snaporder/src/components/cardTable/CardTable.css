@@ -1,0 +1,33 @@
+@import '../../variables/variables.css';
+
+.container-card-table{
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    justify-content: space-between;
+    border-bottom:solid 1px var(--neutral);
+    border-right:solid 1px var(--neutral);
+    height: 20vh;
+    margin:10px 0px;
+    border-radius: 0 0 10px 0px;
+    color:var(--neutral);
+    box-shadow: 3px 3px 5px 1px rgba(96, 114, 129, 0.288);
+}
+.info-text{
+    margin-right: 15px;
+    color:var(--secondary);
+
+    > .info-content{
+        color: var(--neutral);
+        margin-left: 5px;
+        font-size: 1.8em;
+    }
+}
+.open-table{
+    border-radius: 10px 0px 0px 10px;
+    height: 13vh;
+    width: 18%;
+    background-color: var(--secondary);
+    color:var(--neutral);
+    border:solid 1px var(--neutral);
+}

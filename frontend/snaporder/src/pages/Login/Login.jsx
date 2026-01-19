@@ -3,11 +3,23 @@ import TextField from "@mui/material/TextField";
 import Logo from "../../assets/logo.svg";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 
 function Login() {
-
+  const [open, setOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
       <div className="container-form">
@@ -44,14 +56,25 @@ function Login() {
             variant="contained"
             color="success"
             disabled={username === "" || password === ""}
+            onClick={() => navigate("/home")}
           >
             Entra
           </Button>
           <label className="or">Oppure</label>
-          <Button variant="outlined" color="success">
+          <Button variant="outlined" onClick={handleClickOpen}>
             Registrati
           </Button>
         </form>
+        <Dialog open={open} onClose={handleClose}>
+          <form></form>
+
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
+        {/* <Button variant="outlined" color="success">
+            Registrati
+          </Button> */}
       </div>
     </>
   );

@@ -1,5 +1,5 @@
 @import '../../variables/variables.css';
 
-h1{
-    color: var(--primary-color);
+.container-main{
+    height: 93vh;
 }
