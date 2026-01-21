@@ -2,6 +2,7 @@ import "./Home.css";
 import Navbar from "../../components/navbar/Navbar";
 import CardTable from "../../components/cardTable/CardTable";
 import ProductList from "../../components/productList/ProductList";
+import Cash from "../../components/cash/cash";
 import { useState } from "react";
 
 function Home() {
@@ -20,6 +21,11 @@ function Home() {
         {selectArea === "Prodotti" && (
             <>
             <ProductList></ProductList>
+            </>
+        )}
+        {selectArea === "Cassa" && (
+            <>
+            <Cash></Cash>
             </>
         )}
       </div>
