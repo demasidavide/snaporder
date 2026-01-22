@@ -54,16 +54,15 @@ function Order() {
           Bevande
         </ToggleButton>
       </ToggleButtonGroup>
-      <Table sx={{ minWidth: 250 }} size="small" aria-label="a dense table">
+      <Table className="table-body-order" sx={{ minWidth: 250 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell>Descrizione</TableCell>
             <TableCell align="left">Q.ta</TableCell>
             <TableCell align="right"></TableCell>
-            
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody >
           <TableRow>
             <TableCell component="th" scope="row">Acqua naturale</TableCell>
             <TableCell align="left">2</TableCell>

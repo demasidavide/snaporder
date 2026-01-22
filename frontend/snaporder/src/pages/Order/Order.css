@@ -6,6 +6,11 @@
 .type-selected {
   color: var(--confirm) !important;
 }
+.table-body-order .MuiTableCell-root {
+  color: var(--neutral);
+  height: 35px;
+  max-width: 52px;
+}
 .container-add {
   border-radius: 20rem;
   corner-shape: squircle;
@@ -18,13 +23,4 @@
   bottom: 10%;
   background-color: var(--secondary);
 }
-.MuiTableHead-root .MuiTableCell-root {
-      max-width: 12px;
 
-  color: var(--secondary);
-}
-.MuiTableBody-root .MuiTableCell-root {
-    height: 35px;
-      max-width: 52px;
-  color: var(--neutral);
-}
