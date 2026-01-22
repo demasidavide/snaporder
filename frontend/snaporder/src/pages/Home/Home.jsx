@@ -25,7 +25,8 @@ function Home() {
         )}
         {selectArea === "Cassa" && (
             <>
-            <Cash></Cash>
+            <CardTable></CardTable>
+            <CardTable></CardTable>
             </>
         )}
       </div>
