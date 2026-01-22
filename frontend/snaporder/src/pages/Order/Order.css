@@ -1,0 +1,30 @@
+@import "../../variables/variables.css";
+
+.type {
+  color: var(--neutral) !important;
+}
+.type-selected {
+  color: var(--confirm) !important;
+}
+.container-add {
+  border-radius: 20rem;
+  corner-shape: squircle;
+  width: 96%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 10%;
+  background-color: var(--secondary);
+}
+.MuiTableHead-root .MuiTableCell-root {
+      max-width: 12px;
+
+  color: var(--secondary);
+}
+.MuiTableBody-root .MuiTableCell-root {
+    height: 35px;
+      max-width: 52px;
+  color: var(--neutral);
+}
