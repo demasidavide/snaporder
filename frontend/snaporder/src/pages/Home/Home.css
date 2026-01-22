@@ -3,3 +3,9 @@
 .container-main{
     height: 93vh;
 }
+.container-add-table{
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+    margin: 20px 0px;
+}
