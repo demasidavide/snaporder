@@ -1,6 +1,10 @@
 import "./Navbar.css";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Badge from '@mui/material/Badge';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
+
 
 function Navbar({ selectArea, setSelectArea }) {
   return (
@@ -22,6 +26,7 @@ function Navbar({ selectArea, setSelectArea }) {
         >
           Veloce
         </ToggleButton>
+        <Badge badgeContent={4} color="success">
         <ToggleButton
           className={
             selectArea === "Tavoli" ? "selected" : "navbar-toggle-button"
@@ -30,6 +35,7 @@ function Navbar({ selectArea, setSelectArea }) {
         >
           Tavoli
         </ToggleButton>
+        </Badge>
         <ToggleButton
           className={
             selectArea === "Prodotti" ? "selected" : "navbar-toggle-button"
