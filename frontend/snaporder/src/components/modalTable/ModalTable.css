@@ -1,0 +1,28 @@
+@import "../../variables/variables.css";
+
+.label-number{
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--header);
+    margin:20px 20px 10px 0;
+}
+.input-number{
+    width: 70%;
+    height: 40px;
+    border: 1px solid var(--header);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    line-height: 20px;
+    color: var(--header);
+    text-align: center;
+}
+.select-posizione{
+    color: var(--header);
+    width: 80%;
+}
+.select-posizione MenuItem{
+    color: var(--header);
+    
+}
