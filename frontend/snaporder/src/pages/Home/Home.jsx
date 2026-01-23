@@ -22,7 +22,7 @@ function Home() {
 
   useEffect(() => {
     handleTable();
-  }, [selectArea]);
+  }, [selectArea,openModalAddTable]);
 
   //handle per aprire la modale di inserimento tavoli
   const handleOpenModal = () => {
@@ -69,6 +69,7 @@ function Home() {
                 key={t.id_tavolo}
                 name={t.nome_tavolo}
                 num={t.numero_posti}
+                id = {t.id_tavolo}
               ></CardTable>
             ))}
           </>

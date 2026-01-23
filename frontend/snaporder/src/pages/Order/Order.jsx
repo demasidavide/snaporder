@@ -22,9 +22,15 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import EuroIcon from "@mui/icons-material/Euro";
+import CloseIcon from '@mui/icons-material/Close';
+import { useLocation,useNavigate } from "react-router";
 import { useState } from "react";
 
 function Order() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const idTavolo = location.state?.id;
+  console.log(idTavolo);
   const [selectedType, setSelectedType] = useState("Cibo");
   const [openModal, setOpenModal] = useState(false);
   //handle per gestire selezione bevande/cibo
@@ -54,6 +60,10 @@ function Order() {
           Bevande
         </ToggleButton>
       </ToggleButtonGroup>
+      <svg className="close" onClick={()=>navigate('/home')}>
+      <CloseIcon></CloseIcon>
+
+      </svg>
       <Table className="table-body-order" sx={{ minWidth: 250 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>

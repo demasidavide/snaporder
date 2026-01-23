@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import "./CardTable.css";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-function CardTable({name,num,located}) {
+function CardTable({name,num,located,id}) {
   const navigate = useNavigate();
   return (
     <>
@@ -16,7 +16,7 @@ function CardTable({name,num,located}) {
           </span>
           <h5 className="info-text">Totale: <span className="info-content">75$</span> </h5>
         </div>
-        <button onClick={()=>navigate('/order')} className="open-table">
+        <button onClick={()=>navigate('/order', {state:{ id : id }})} className="open-table">
           <ArrowForwardIosIcon fontSize="large"></ArrowForwardIosIcon>
         </button>
       </div>
