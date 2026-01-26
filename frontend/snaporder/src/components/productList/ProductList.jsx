@@ -22,40 +22,46 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import ModeIcon from "@mui/icons-material/Mode";
-import Slide from '@mui/material/Slide';
+import Slide from "@mui/material/Slide";
 import axios from "axios";
 import { useState, UseEffect } from "react";
 import { useEffect } from "react";
 
 function ProductList() {
-  const [openAlert, setOpenAlert] = useState(false);//apertura alert cancellazione
-  const [openModal, setOpenModal] = useState(false);//apertura modale add prodotti
-  const [openModalMod, setOpenModalMod] = useState(false);//apertura modale modifica prodotti
-  const [selectedType, setSelectedType] = useState("Cibo");//selezione tipo da visualizzare
-  const [food, setFood] = useState([]);//elenco cibo
-  const [drink, setDrink] = useState([]);//elenco bevande
-  const [allProducts, setAllProducts] = useState([]);//tutti i prodotti
-  const [nameProd, setNameProd] = useState("");//nome nuovo prodotto
-  const [descProd, setDescProd] = useState("");//descrizione nuovo prodotto
-  const [priceProd, setPriceProd] = useState("");//prezzo nuovo prodotto
-  const [typeProd, setTypeProd] = useState("");//tipo nuovo prodotto
-  const [idToDelete, setIdToDelete] = useState();//id da cancellare
-  const [prodSelected, setProdSelected] = useState([]);//dati di un singolo prodotto
+  const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
+  const [openModal, setOpenModal] = useState(false); //apertura modale add prodotti
+  const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
+  const [selectedType, setSelectedType] = useState("Cibo"); //selezione tipo da visualizzare
+  const [food, setFood] = useState([]); //elenco cibo
+  const [drink, setDrink] = useState([]); //elenco bevande
+  const [allProducts, setAllProducts] = useState([]); //tutti i prodotti
+  const [nameProd, setNameProd] = useState(""); //nome nuovo prodotto
+  const [descProd, setDescProd] = useState(""); //descrizione nuovo prodotto
+  const [priceProd, setPriceProd] = useState(""); //prezzo nuovo prodotto
+  const [typeProd, setTypeProd] = useState(""); //tipo nuovo prodotto
+  const [modData, setModData] = useState({
+  nome: "",
+  descrizione: "",
+  prezzo: "",
+  tipo: ""
+  })
+  const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
+  const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
 
   useEffect(() => {
     handleShowProduct();
   }, [selectedType, openModal]);
 
-//gestione apertura alert cancellazione---------------
-const handleOpenAlert = (id,nome) => {
-  setIdToDelete(id);
-  setProdSelected([{nome}]);
-  setOpenAlert(true);
+  //gestione apertura alert cancellazione---------------
+  const handleOpenAlert = (id, nome) => {
+    setIdToDelMod(id);
+    setProdSelected([{ nome }]);
+    setOpenAlert(true);
   };
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
-    setIdToDelete();
+    setIdToDelMod();
   };
   //---------------------------------------------------
   //handle per gestire selezione bevande/cibo----------
@@ -73,6 +79,18 @@ const handleOpenAlert = (id,nome) => {
   //handle per chiudere la modale di inserimento porodotti
   const handleCloseModal = () => {
     setOpenModal(false);
+  };
+  //------------------------------------------------------
+  //handle per aprire la modale di modifica porodotti
+  const handleOpenModalMod = (id,nome,descrizione,prezzo,tipo) => {
+    setIdToDelMod(id);
+    setModData({ nome: nome, descrizione: descrizione, prezzo: prezzo, tipo: tipo });
+    setOpenModalMod(true);
+  };
+  //------------------------------------------------------
+  //handle per chiudere la modale di modifica porodotti
+  const handleCloseModalMod = () => {
+    setOpenModalMod(false);
   };
   //------------------------------------------------------
   //Lettura prodotti -cibi-bevande-tutti------------------
@@ -125,22 +143,24 @@ const handleOpenAlert = (id,nome) => {
   };
   //---------------------------------------------------------------------
   //Cancella prodotto----------------------------------------------------
-  const handleDelete = async()=>{
-    try{
-      const del = await axios.delete(`http://127.0.0.1:3000/prodotti/${idToDelete}`);
+  const handleDelete = async () => {
+    try {
+      const del = await axios.delete(
+        `http://127.0.0.1:3000/prodotti/${idToDelMod}`,
+      );
       console.log(del.status);
-      handleCloseAlert(); 
-      handleShowProduct(); 
-    }catch(error){
-      console.error("Errore nella cancellazione", error)
+      handleCloseAlert();
+      handleShowProduct();
+    } catch (error) {
+      console.error("Errore nella cancellazione", error);
     }
   };
   //---------------------------------------------------------------------
 
   return (
     <>
-    {/* inizio modale cancellazione */}
-    <Dialog
+      {/* inizio modale cancellazione */}
+      <Dialog
         open={openAlert}
         onClose={handleCloseAlert}
         aria-labelledby="alert-dialog-title"
@@ -151,16 +171,84 @@ const handleOpenAlert = (id,nome) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {prodSelected.map((p)=>p.nome)}
+            {prodSelected.map((p) => p.nome)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAlert}>Indietro</Button>
-          <Button sx={{ color : "red" }} onClick={handleDelete} autoFocus>
+          <Button sx={{ color: "red" }} onClick={handleDelete} autoFocus>
             Elimina
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Fine modale cancellazione */}
+      {/* Inizio modale modifica */}
+      <Dialog open={openModalMod} onClose={handleCloseModalMod}>
+        <DialogTitle>Modifica prodotto</DialogTitle>
+        <DialogContent>
+          <form id="subscription-form" onSubmit={handleNewProd}>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="text"
+              label={modData.nome}
+              type="text"
+              fullWidth
+              variant="standard"
+              value={nameProd}
+              onChange={(e) => setNameProd(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="descrizione"
+              name="descrizione"
+              label={modData.descrizione}
+              type="text"
+              fullWidth
+              variant="standard"
+              value={descProd}
+              onChange={(e) => setDescProd(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="prezzo"
+              name="email"
+              label={modData.prezzo}
+              type="number"
+              fullWidth
+              variant="standard"
+              value={priceProd}
+              onChange={(e) => setPriceProd(e.target.value)}
+            />
+            <InputLabel id="demo-simple-select-label">
+              Cibo / Bevanda
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label={modData.tipo}
+              sx={{ minWidth: 250 }}
+              value={typeProd}
+              onChange={(e) => setTypeProd(e.target.value)}
+            >
+              <MenuItem value="cibo">Cibo</MenuItem>
+              <MenuItem value="Bevanda">Bevanda</MenuItem>
+            </Select>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseModalMod()}>Indietro</Button>
+          <Button type="submit" form="subscription-form">
+            Aggiungi
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Fine modale modifica */}
       <ToggleButtonGroup
         onChange={handleTypeChange}
         exclusive
@@ -251,7 +339,7 @@ const handleOpenAlert = (id,nome) => {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={()=>handleCloseModal}>Indietro</Button>
+            <Button onClick={() => handleCloseModal}>Indietro</Button>
             <Button type="submit" form="subscription-form">
               Aggiungi
             </Button>
@@ -274,8 +362,21 @@ const handleOpenAlert = (id,nome) => {
                   <TableCell>{f.nome}</TableCell>
                   <TableCell>€ {f.prezzo_unitario}</TableCell>
                   <TableCell>
-                    <ModeIcon></ModeIcon>
-                    <DeleteIcon onClick={()=>handleOpenAlert(f.id_prodotto, f.nome)} className="delete" />
+                    <ModeIcon
+                      onClick={() =>
+                        handleOpenModalMod(
+                          f.id_prodotto,
+                          f.nome,
+                          f.descrizione,
+                          f.prezzo_unitario,
+                          f.tipo_prodotto,
+                        )
+                      }
+                    ></ModeIcon>
+                    <DeleteIcon
+                      onClick={() => handleOpenAlert(f.id_prodotto, f.nome)}
+                      className="delete"
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -286,7 +387,10 @@ const handleOpenAlert = (id,nome) => {
                   <TableCell>€ {d.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon></ModeIcon>
-                    <DeleteIcon onClick={()=>handleOpenAlert(d.id_prodotto, d.nome)} className="delete" />
+                    <DeleteIcon
+                      onClick={() => handleOpenAlert(d.id_prodotto, d.nome)}
+                      className="delete"
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -297,7 +401,10 @@ const handleOpenAlert = (id,nome) => {
                   <TableCell>€ {a.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon></ModeIcon>
-                    <DeleteIcon onClick={()=>handleOpenAlert(a.id_prodotto, a.nome)} className="delete" />
+                    <DeleteIcon
+                      onClick={() => handleOpenAlert(a.id_prodotto, a.nome)}
+                      className="delete"
+                    />
                   </TableCell>
                 </TableRow>
               ))}
