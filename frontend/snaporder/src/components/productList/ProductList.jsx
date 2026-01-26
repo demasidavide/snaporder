@@ -31,6 +31,10 @@ function ProductList() {
   const [food, setFood] = useState([]);
   const [drink, setDrink] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
+  const [nameProd, setNameProd] = useState("");
+  const [descProd, setDescProd] = useState("");
+  const [priceProd, setPriceProd] = useState("");
+  const [typeProd, setTypeProd] = useState("");
 
   useEffect(()=>{
     handleShowProduct();
@@ -86,6 +90,24 @@ function ProductList() {
       console.error("errore",error)
     }
   }
+  //--------------------------------------------------------------------
+  //Aggiunta nuovo prodotto---------------------------------------------
+  const handleNewProd = async(e)=>{
+    e.preventDefault();
+    try{
+      const ins = await axios.post("http://127.0.0.1:3000/prodotti/",{
+        nome : nameProd, 
+        descrizione : descProd, 
+        prezzo_unitario : priceProd, 
+        tipo_prodotto : typeProd, 
+      })
+      console.log(ins);
+      handleCloseModal();
+    }catch(error){
+      console.log(error)
+    }
+  }
+  //---------------------------------------------------------------------
 
 
   return (
@@ -119,7 +141,7 @@ function ProductList() {
          <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>Aggiungi prodotto</DialogTitle>
         <DialogContent>
-          <form id="subscription-form">
+          <form id="subscription-form" onSubmit={handleNewProd}>
             <TextField
               autoFocus
               required
@@ -130,6 +152,8 @@ function ProductList() {
               type="text"
               fullWidth
               variant="standard"
+              value={nameProd}
+              onChange={(e)=>setNameProd(e.target.value)}
             />
             <TextField
               autoFocus
@@ -140,6 +164,8 @@ function ProductList() {
               type="text"
               fullWidth
               variant="standard"
+              value={descProd}
+              onChange={(e)=>setDescProd(e.target.value)}
             />
             <TextField
               autoFocus
@@ -151,15 +177,17 @@ function ProductList() {
               type="number"
               fullWidth
               variant="standard"
+              value={priceProd}
+              onChange={(e)=>setPriceProd(e.target.value)}
             />
             <InputLabel id="demo-simple-select-label">Cibo / Bevanda</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value="Tipo"
           label="gdfhfrhfdghfdgjhgfhdf"
           sx={{ minWidth: 250 }}
-          onChange=""
+          value={typeProd}
+          onChange={(e)=>setTypeProd(e.target.value)}
         >
           <MenuItem value="cibo">Cibo</MenuItem>
           <MenuItem value="Bevanda">Bevanda</MenuItem>
@@ -167,9 +195,9 @@ function ProductList() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal}>Cancel</Button>
+          <Button onClick={handleCloseModal}>Indietro</Button>
           <Button type="submit" form="subscription-form">
-            Subscribe
+            Aggiungi
           </Button>
         </DialogActions>
       </Dialog>

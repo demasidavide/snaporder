@@ -38,4 +38,27 @@ router.get("/bevande", async (req, res) => {
   }
 });
 //-------------------------------------------------------------
+//POST pe rinserimento prodotti--------------------------------
+router.post("/", async (req, res) => {
+  const { nome, descrizione, prezzo_unitario, tipo_prodotto } = req.body;
+  try {
+    if (!nome || !prezzo_unitario || !tipo_prodotto){
+      return res
+        .status(400)
+        .json({ error: "Dati non validi" });
+    }
+
+    const result = await pool.query(
+      `
+            INSERT INTO prodotti (nome, descrizione, prezzo_unitario, tipo_prodotto) 
+            VALUES (?,?,?,?)`,
+      [ nome, descrizione, prezzo_unitario, tipo_prodotto ],
+    );
+    res.status(201).json({
+      message: `Prodotto ${nome} inserito con successo`,
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Errore nel Database" });
+  }
+});
 module.exports = router;
