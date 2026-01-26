@@ -14,3 +14,6 @@
 .MuiTableCell-root.MuiTableCell-body {
     width: 10%;
 }
+.delete {
+    margin-left: 10px;
+}

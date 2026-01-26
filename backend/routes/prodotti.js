@@ -1,7 +1,21 @@
 const express = require("express");
 const pool = require("../connDb");
 const router = express.Router();
-
+//GET per prodotto da id specifico-----------------------------
+router.get("/single", async (req, res) => {
+  const { id } = req.query;
+  try {
+    if (!id || isNaN(id)) {
+      return res
+        .status(400)
+        .json({ error: `ID ${id} non trovato o non valido` });
+    }
+    const [rows] = await pool.query("SELECT * FROM prodotti WHERE id_prodotto = ?",[id]);
+    res.status(200).json(rows);
+  } catch (e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+});
 //GET tutti i prodotti-----------------------------------------
 router.get("/", async (req, res) => {
   try {
@@ -61,4 +75,27 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Errore nel Database" });
   }
 });
+//Delete per modifica-------------------------------------------------------
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!id || isNaN(id)) {
+      return res
+        .status(400)
+        .json({ error: `ID ${id} non trovato o non valido` });
+    }
+    const result = await pool.query(
+      `
+            DELETE FROM prodotti WHERE id_prodotto = ?`,
+      [id],
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Id non trovato" });
+    }
+    res.status(204).send();
+  } catch (e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+});
+
 module.exports = router;

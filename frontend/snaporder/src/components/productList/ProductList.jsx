@@ -8,44 +8,60 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Fab from "@mui/material/Fab";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import ModeIcon from "@mui/icons-material/Mode";
+import Slide from '@mui/material/Slide';
 import axios from "axios";
 import { useState, UseEffect } from "react";
 import { useEffect } from "react";
 
 function ProductList() {
-  const [selectedType, setSelectedType] = useState("Bevande");
-  const [openModal, setOpenModal] = useState(false);
-  const [food, setFood] = useState([]);
-  const [drink, setDrink] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
-  const [nameProd, setNameProd] = useState("");
-  const [descProd, setDescProd] = useState("");
-  const [priceProd, setPriceProd] = useState("");
-  const [typeProd, setTypeProd] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);//apertura alert cancellazione
+  const [openModal, setOpenModal] = useState(false);//apertura modale add prodotti
+  const [openModalMod, setOpenModalMod] = useState(false);//apertura modale modifica prodotti
+  const [selectedType, setSelectedType] = useState("Cibo");//selezione tipo da visualizzare
+  const [food, setFood] = useState([]);//elenco cibo
+  const [drink, setDrink] = useState([]);//elenco bevande
+  const [allProducts, setAllProducts] = useState([]);//tutti i prodotti
+  const [nameProd, setNameProd] = useState("");//nome nuovo prodotto
+  const [descProd, setDescProd] = useState("");//descrizione nuovo prodotto
+  const [priceProd, setPriceProd] = useState("");//prezzo nuovo prodotto
+  const [typeProd, setTypeProd] = useState("");//tipo nuovo prodotto
+  const [idToDelete, setIdToDelete] = useState();//id da cancellare
+  const [prodSelected, setProdSelected] = useState([]);//dati di un singolo prodotto
 
-  useEffect(()=>{
+  useEffect(() => {
     handleShowProduct();
-  },[selectedType,openModal])
+  }, [selectedType, openModal]);
 
+//gestione apertura alert cancellazione---------------
+const handleOpenAlert = (id,nome) => {
+  setIdToDelete(id);
+  setProdSelected([{nome}]);
+  setOpenAlert(true);
+  };
 
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+    setIdToDelete();
+  };
+  //---------------------------------------------------
   //handle per gestire selezione bevande/cibo----------
   const handleTypeChange = (e, newType) => {
     if (newType !== null) {
       setSelectedType(newType);
-      console.log(newType);
     }
   };
   //----------------------------------------------------
@@ -60,58 +76,91 @@ function ProductList() {
   };
   //------------------------------------------------------
   //Lettura prodotti -cibi-bevande-tutti------------------
-  const handleShowProduct = async()=>{
-    try{
-      if(selectedType === "Cibo"){
+  const handleShowProduct = async () => {
+    try {
+      if (selectedType === "Cibo") {
         const res = await axios.get("http://127.0.0.1:3000/prodotti/cibi");
-        if(res.data.length >= 1){
+        if (res.data.length >= 1) {
           setFood(res.data);
-        }else{
-          console.log("nessun cibo trovato")
+        } else {
+          console.log("nessun cibo trovato");
         }
       }
-      if(selectedType === "Bevande"){
+      if (selectedType === "Bevande") {
         const res = await axios.get("http://127.0.0.1:3000/prodotti/bevande");
-        if(res.data.length >= 1){
+        if (res.data.length >= 1) {
           setDrink(res.data);
-        }else{
-          console.log("nessuna bevanda trovata")
+        } else {
+          console.log("nessuna bevanda trovata");
         }
       }
-      if(selectedType === "Tutti"){
+      if (selectedType === "Tutti") {
         const res = await axios.get("http://127.0.0.1:3000/prodotti/");
-        if(res.data.length >= 1){
+        if (res.data.length >= 1) {
           setAllProducts(res.data);
-        }else{
-          console.log("nessun all trovato")
+        } else {
+          console.log("nessun all trovato");
         }
       }
-    }catch(error){
-      console.error("errore",error)
+    } catch (error) {
+      console.error("errore", error);
     }
-  }
+  };
   //--------------------------------------------------------------------
   //Aggiunta nuovo prodotto---------------------------------------------
-  const handleNewProd = async(e)=>{
+  const handleNewProd = async (e) => {
     e.preventDefault();
-    try{
-      const ins = await axios.post("http://127.0.0.1:3000/prodotti/",{
-        nome : nameProd, 
-        descrizione : descProd, 
-        prezzo_unitario : priceProd, 
-        tipo_prodotto : typeProd, 
-      })
+    try {
+      const ins = await axios.post("http://127.0.0.1:3000/prodotti/", {
+        nome: nameProd,
+        descrizione: descProd,
+        prezzo_unitario: priceProd,
+        tipo_prodotto: typeProd,
+      });
       console.log(ins);
       handleCloseModal();
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
   //---------------------------------------------------------------------
-
+  //Cancella prodotto----------------------------------------------------
+  const handleDelete = async()=>{
+    try{
+      const del = await axios.delete(`http://127.0.0.1:3000/prodotti/${idToDelete}`);
+      console.log(del.status);
+      handleCloseAlert(); 
+      handleShowProduct(); 
+    }catch(error){
+      console.error("Errore nella cancellazione", error)
+    }
+  };
+  //---------------------------------------------------------------------
 
   return (
     <>
+    {/* inizio modale cancellazione */}
+    <Dialog
+        open={openAlert}
+        onClose={handleCloseAlert}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Elimina il prodotto ?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {prodSelected.map((p)=>p.nome)}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAlert}>Indietro</Button>
+          <Button sx={{ color : "red" }} onClick={handleDelete} autoFocus>
+            Elimina
+          </Button>
+        </DialogActions>
+      </Dialog>
       <ToggleButtonGroup
         onChange={handleTypeChange}
         exclusive
@@ -135,72 +184,79 @@ function ProductList() {
         >
           Tutti
         </ToggleButton>
-        <Fab onClick={handleOpenModal} className="add" color="primary" aria-label="add">
+        <Fab
+          onClick={handleOpenModal}
+          className="add"
+          color="primary"
+          aria-label="add"
+        >
           <AddIcon />
         </Fab>
-         <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>Aggiungi prodotto</DialogTitle>
-        <DialogContent>
-          <form id="subscription-form" onSubmit={handleNewProd}>
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="name"
-              name="text"
-              label="Nome prodotto"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={nameProd}
-              onChange={(e)=>setNameProd(e.target.value)}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="descrizione"
-              name="descrizione"
-              label="Descrizione --opzionale--"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={descProd}
-              onChange={(e)=>setDescProd(e.target.value)}
-            />
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="prezzo"
-              name="email"
-              label="Prezzo unitario"
-              type="number"
-              fullWidth
-              variant="standard"
-              value={priceProd}
-              onChange={(e)=>setPriceProd(e.target.value)}
-            />
-            <InputLabel id="demo-simple-select-label">Cibo / Bevanda</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="gdfhfrhfdghfdgjhgfhdf"
-          sx={{ minWidth: 250 }}
-          value={typeProd}
-          onChange={(e)=>setTypeProd(e.target.value)}
-        >
-          <MenuItem value="cibo">Cibo</MenuItem>
-          <MenuItem value="Bevanda">Bevanda</MenuItem>
-        </Select>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal}>Indietro</Button>
-          <Button type="submit" form="subscription-form">
-            Aggiungi
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={openModal} onClose={handleCloseModal}>
+          <DialogTitle>Aggiungi prodotto</DialogTitle>
+          <DialogContent>
+            <form id="subscription-form" onSubmit={handleNewProd}>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="text"
+                label="Nome prodotto"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={nameProd}
+                onChange={(e) => setNameProd(e.target.value)}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="descrizione"
+                name="descrizione"
+                label="Descrizione --opzionale--"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={descProd}
+                onChange={(e) => setDescProd(e.target.value)}
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="prezzo"
+                name="email"
+                label="Prezzo unitario"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={priceProd}
+                onChange={(e) => setPriceProd(e.target.value)}
+              />
+              <InputLabel id="demo-simple-select-label">
+                Cibo / Bevanda
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="gdfhfrhfdghfdgjhgfhdf"
+                sx={{ minWidth: 250 }}
+                value={typeProd}
+                onChange={(e) => setTypeProd(e.target.value)}
+              >
+                <MenuItem value="cibo">Cibo</MenuItem>
+                <MenuItem value="Bevanda">Bevanda</MenuItem>
+              </Select>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>handleCloseModal}>Indietro</Button>
+            <Button type="submit" form="subscription-form">
+              Aggiungi
+            </Button>
+          </DialogActions>
+        </Dialog>
       </ToggleButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 250 }} aria-label="a dense table">
@@ -212,42 +268,39 @@ function ProductList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedType === "Cibo" && (
-              (food.map((f)=>(
-               <TableRow
-               key={f.id_prodotto}>
-              <TableCell>{f.nome}</TableCell>
-              <TableCell>{f.prezzo_unitario}</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow> 
-              ))
-            ))}
-            {selectedType === "Bevande" && (
-              (drink.map((d)=>(
-               <TableRow
-               key={d.id_prodotto}>
-              <TableCell>{d.nome}</TableCell>
-              <TableCell>{d.prezzo_unitario}</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow> 
-              ))
-            ))}
-            {selectedType === "Tutti" && (
-              (allProducts.map((a)=>(
-               <TableRow
-               key={a.id_prodotto}>
-              <TableCell>{a.nome}</TableCell>
-              <TableCell>{a.prezzo_unitario}</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow> 
-              ))
-            ))}
+            {selectedType === "Cibo" &&
+              food.map((f) => (
+                <TableRow key={f.id_prodotto}>
+                  <TableCell>{f.nome}</TableCell>
+                  <TableCell>€ {f.prezzo_unitario}</TableCell>
+                  <TableCell>
+                    <ModeIcon></ModeIcon>
+                    <DeleteIcon onClick={()=>handleOpenAlert(f.id_prodotto, f.nome)} className="delete" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            {selectedType === "Bevande" &&
+              drink.map((d) => (
+                <TableRow key={d.id_prodotto}>
+                  <TableCell>{d.nome}</TableCell>
+                  <TableCell>€ {d.prezzo_unitario}</TableCell>
+                  <TableCell>
+                    <ModeIcon></ModeIcon>
+                    <DeleteIcon onClick={()=>handleOpenAlert(d.id_prodotto, d.nome)} className="delete" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            {selectedType === "Tutti" &&
+              allProducts.map((a) => (
+                <TableRow key={a.id_prodotto}>
+                  <TableCell>{a.nome}</TableCell>
+                  <TableCell>€ {a.prezzo_unitario}</TableCell>
+                  <TableCell>
+                    <ModeIcon></ModeIcon>
+                    <DeleteIcon onClick={()=>handleOpenAlert(a.id_prodotto, a.nome)} className="delete" />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
