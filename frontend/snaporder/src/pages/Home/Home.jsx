@@ -37,7 +37,7 @@ function Home() {
   //GET per popolare cardTable--------------------------
   const handleTable = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:3000/tavoli");
+      const res = await axios.get("http://127.0.0.1:3000/ordinazioni");
       setTable(res.data);
     } catch (error) {
       console.error("Errore nel caricamento dei tavoli:", error);
@@ -66,10 +66,11 @@ function Home() {
             </div>
             {table.map((t) => (
               <CardTable
-                key={t.id_tavolo}
-                name={t.nome_tavolo}
-                num={t.numero_posti}
-                id = {t.id_tavolo}
+                key={t.id_ordinazione}
+                name={t.nome_ordine}
+                num={t.numero_persone}
+                located={t.posizione}
+                id = {t.id_ordinazione}
               ></CardTable>
             ))}
           </>

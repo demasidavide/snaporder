@@ -1,4 +1,4 @@
-import "./ModalTable.css";
+import './ModalOrder.css'
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,38 +7,23 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
 import { useState } from "react";
 
-function ModalTable({ open, onClose }) {
+function ModalOrder({ open, onClose }){
 
-  const [ position, setPosition ] = useState("sotto");
-  const [ name, setName ] = useState("");
-  const [ numPosti, setNumPosti ] = useState(1);
 
-  const handleSubmit = async(e)=>{
-    e.preventDefault();
-    try{
-    const res = await axios.post('http://127.0.0.1:3000/ordinazioni/', { 
-      nome_ordine: name,
-      numero_persone:numPosti,
-      id_utente:1,
-      stato:"aperta",
-      posizione: position || "sotto",
-    });
-    console.log(res.data);
-    }catch(error){
-      console.error("Errore inserimento tavolo",error);
+    const handleSubmit = (e)=>{
+        e.preventDefault();
+        console.log("ciao")
 
     }
-  }
 
-  return (
-    <>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Aggiungi Ordine</DialogTitle>
+    return(
+        <>
+        <Dialog open={open} onClose={onClose}>
+        <DialogTitle>Aggiungi </DialogTitle>
         <DialogContent>
           <form id="subscription-form" onSubmit={handleSubmit}>
             <TextField
@@ -51,7 +36,7 @@ function ModalTable({ open, onClose }) {
               type="text"
               fullWidth
               variant="standard"
-              value={name}
+              value={""}
               onChange={(e)=>setName(e.target.value)}
             />
             <label className="label-number">Persone</label>
@@ -61,7 +46,7 @@ function ModalTable({ open, onClose }) {
               min={1}
               max={20}
               defaultValue={1}
-              value={numPosti}  
+              value={""}  
   onChange={(e) => setNumPosti(e.target.value)}
             ></input>
             <InputLabel id="demo-simple-select-label">Posizione</InputLabel>
@@ -69,7 +54,7 @@ function ModalTable({ open, onClose }) {
               className="select-posizione"
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={position}
+              value={""}
               label="Age"
               onChange={(e)=>setPosition(e.target.value)}
             >
@@ -85,15 +70,14 @@ function ModalTable({ open, onClose }) {
             </Select>
             <DialogActions>
               <Button onClick={onClose}>Indietro</Button>
-              <Button onClick={onClose} type="submit" form="subscription-form">
+              <Button type="submit" form="subscription-form">
                 Aggiungi
               </Button>
             </DialogActions>
           </form>
         </DialogContent>
       </Dialog>
-    </>
-  );
+        </>
+    )
 }
-
-export default ModalTable;
+export default ModalOrder;

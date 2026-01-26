@@ -3,11 +3,14 @@
 .add {
   position: fixed;
   margin: 10px 0px !important;
-  left: 70%;
+  left: 20%;
 }
 .type{
     color:var(--neutral) !important;
 }
 .type-selected{
     color:var(--confirm) !important;
+}
+.MuiTableCell-root.MuiTableCell-body {
+    width: 10%;
 }

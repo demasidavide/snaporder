@@ -21,26 +21,73 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from "react";
+import axios from "axios";
+import { useState, UseEffect } from "react";
+import { useEffect } from "react";
 
 function ProductList() {
-  const [selectedType, setSelectedType] = useState("Cibo");
+  const [selectedType, setSelectedType] = useState("Bevande");
   const [openModal, setOpenModal] = useState(false);
-  //handle per gestire selezione bevande/cibo
+  const [food, setFood] = useState([]);
+  const [drink, setDrink] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(()=>{
+    handleShowProduct();
+  },[selectedType,openModal])
+
+
+  //handle per gestire selezione bevande/cibo----------
   const handleTypeChange = (e, newType) => {
     if (newType !== null) {
       setSelectedType(newType);
       console.log(newType);
     }
   };
+  //----------------------------------------------------
   //handle per aprire la modale di inserimento porodotti
   const handleOpenModal = () => {
     setOpenModal(true);
   };
+  //------------------------------------------------------
   //handle per chiudere la modale di inserimento porodotti
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  //------------------------------------------------------
+  //Lettura prodotti -cibi-bevande-tutti------------------
+  const handleShowProduct = async()=>{
+    try{
+      if(selectedType === "Cibo"){
+        const res = await axios.get("http://127.0.0.1:3000/prodotti/cibi");
+        if(res.data.length >= 1){
+          setFood(res.data);
+        }else{
+          console.log("nessun cibo trovato")
+        }
+      }
+      if(selectedType === "Bevande"){
+        const res = await axios.get("http://127.0.0.1:3000/prodotti/bevande");
+        if(res.data.length >= 1){
+          setDrink(res.data);
+        }else{
+          console.log("nessuna bevanda trovata")
+        }
+      }
+      if(selectedType === "Tutti"){
+        const res = await axios.get("http://127.0.0.1:3000/prodotti/");
+        if(res.data.length >= 1){
+          setAllProducts(res.data);
+        }else{
+          console.log("nessun all trovato")
+        }
+      }
+    }catch(error){
+      console.error("errore",error)
+    }
+  }
+
+
   return (
     <>
       <ToggleButtonGroup
@@ -55,10 +102,16 @@ function ProductList() {
           Cibo
         </ToggleButton>
         <ToggleButton
-          className={selectedType === "Cibo" ? "type" : "type-selected"}
+          className={selectedType === "Bevande" ? "type-selected" : "type"}
           value="Bevande"
         >
           Bevande
+        </ToggleButton>
+        <ToggleButton
+          className={selectedType === "Tutti" ? "type-selected" : "type"}
+          value="Tutti"
+        >
+          Tutti
         </ToggleButton>
         <Fab onClick={handleOpenModal} className="add" color="primary" aria-label="add">
           <AddIcon />
@@ -126,94 +179,47 @@ function ProductList() {
           <TableHead>
             <TableRow>
               <TableCell>Nome</TableCell>
-              <TableCell>Descr.</TableCell>
-              <TableCell>Tipo</TableCell>
               <TableCell>Prezzo</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
+            {selectedType === "Cibo" && (
+              (food.map((f)=>(
+               <TableRow
+               key={f.id_prodotto}>
+              <TableCell>{f.nome}</TableCell>
+              <TableCell>{f.prezzo_unitario}</TableCell>
               <TableCell>
                 <DeleteIcon />
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>--</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
+            </TableRow> 
+              ))
+            ))}
+            {selectedType === "Bevande" && (
+              (drink.map((d)=>(
+               <TableRow
+               key={d.id_prodotto}>
+              <TableCell>{d.nome}</TableCell>
+              <TableCell>{d.prezzo_unitario}</TableCell>
               <TableCell>
                 <DeleteIcon />
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
+            </TableRow> 
+              ))
+            ))}
+            {selectedType === "Tutti" && (
+              (allProducts.map((a)=>(
+               <TableRow
+               key={a.id_prodotto}>
+              <TableCell>{a.nome}</TableCell>
+              <TableCell>{a.prezzo_unitario}</TableCell>
               <TableCell>
                 <DeleteIcon />
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Acqua naturale</TableCell>
-              <TableCell>mezzo litro</TableCell>
-              <TableCell>bevanda</TableCell>
-              <TableCell>2.50$</TableCell>
-              <TableCell>
-                <DeleteIcon />
-              </TableCell>
-            </TableRow>
+            </TableRow> 
+              ))
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

@@ -11,7 +11,7 @@ function Navbar({ selectArea, setSelectArea }) {
   useEffect(() => {
     const handleBadge = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:3000/tavoli/tot");
+        const res = await axios.get("http://127.0.0.1:3000/ordinazioni/tot");
         setBadge(res.data.total || 0); 
       } catch (error) {
         console.error("Errore nel caricamento del badge:", error);

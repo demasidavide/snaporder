@@ -22,17 +22,29 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import EuroIcon from "@mui/icons-material/Euro";
-import CloseIcon from '@mui/icons-material/Close';
-import { useLocation,useNavigate } from "react-router";
+import CloseIcon from "@mui/icons-material/Close";
+import ModalOrder from "../../components/modalOrder/ModalOrder";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 
 function Order() {
   const navigate = useNavigate();
   const location = useLocation();
-  const idTavolo = location.state?.id;
-  console.log(idTavolo);
+  const idOrdine = location.state?.id;
+  console.log(idOrdine);
   const [selectedType, setSelectedType] = useState("Cibo");
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalOrder, setOpenModalOrder] = useState(false);
+
+  //handle per aprire la modale di inserimento tavoli
+  const handleOpenModal = () => {
+    setOpenModalOrder(true);
+  };
+  //---------------------------------------------------
+  //handle per chiudere la modale di inserimento tavoli
+  const handleCloseModal = () => {
+    setOpenModalOrder(false);
+  };
+  //----------------------------------------------------
   //handle per gestire selezione bevande/cibo
   const handleTypeChange = (e, newType) => {
     if (newType !== null) {
@@ -40,6 +52,7 @@ function Order() {
       console.log(newType);
     }
   };
+
   return (
     <>
       <ToggleButtonGroup
@@ -60,11 +73,19 @@ function Order() {
           Bevande
         </ToggleButton>
       </ToggleButtonGroup>
-      <svg className="close" onClick={()=>navigate('/home')}>
-      <CloseIcon></CloseIcon>
-
+      <svg className="close" onClick={() => navigate("/home")}>
+        <CloseIcon></CloseIcon>
       </svg>
-      <Table className="table-body-order" sx={{ minWidth: 250 }} size="small" aria-label="a dense table">
+      <ModalOrder
+        open={openModalOrder}
+        onClose={handleCloseModal}
+      />
+      <Table
+        className="table-body-order"
+        sx={{ minWidth: 250 }}
+        size="small"
+        aria-label="a dense table"
+      >
         <TableHead>
           <TableRow>
             <TableCell>Descrizione</TableCell>
@@ -72,71 +93,100 @@ function Order() {
             <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody >
+        <TableBody>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">Acqua naturale</TableCell>
+            <TableCell component="th" scope="row">
+              Acqua naturale
+            </TableCell>
             <TableCell align="left">2</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
         </TableBody>
       </Table>
       <div className="container-add">
-        <Fab onClick="" className="add-order" color="primary" aria-label="add">
+        <Fab
+          onClick={() => setOpenModalOrder(!openModalOrder)}
+          className="add-order"
+          color="primary"
+          aria-label="add"
+        >
           <AddIcon />
         </Fab>
         <Fab variant="extended">
