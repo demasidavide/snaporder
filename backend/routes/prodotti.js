@@ -97,5 +97,30 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Errore nel database" });
   }
 });
+//Put modifica con id--------------------------------------------------------
+router.put('/:id', async(req,res)=>{
+  const { id } = req.params;
+  const { nome, descrizione, prezzo_unitario, tipo_prodotto } = req.body;
+  try{
+    if(!id || isNaN(id)){
+      return res.status(400).json({error: "Id non trovato o non valido"});
+    }
+    if (!nome || !prezzo_unitario || !tipo_prodotto) {
+      return res.status(400).json({ error: "Dati mancanti o non validi" });
+    }
+    const [result] = await pool.query(`UPDATE prodotti
+SET nome = ?, descrizione = ?, 
+prezzo_unitario = ?, tipo_prodotto = ?
+WHERE id_prodotto = ?`, 
+      [nome, descrizione, prezzo_unitario, tipo_prodotto, id]);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Prodotto non trovato" });
+    }
+    res.status(200).json({ message: "Prodotto aggiornato con successo" });
+  } catch(e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+})
 
 module.exports = router;

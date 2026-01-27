@@ -40,11 +40,11 @@ function ProductList() {
   const [priceProd, setPriceProd] = useState(""); //prezzo nuovo prodotto
   const [typeProd, setTypeProd] = useState(""); //tipo nuovo prodotto
   const [modData, setModData] = useState({
-  nome: "",
-  descrizione: "",
-  prezzo: "",
-  tipo: ""
-  })
+    nome: "",
+    descrizione: "",
+    prezzo: "",
+    tipo: "",
+  });
   const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
   const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
 
@@ -82,9 +82,14 @@ function ProductList() {
   };
   //------------------------------------------------------
   //handle per aprire la modale di modifica porodotti
-  const handleOpenModalMod = (id,nome,descrizione,prezzo,tipo) => {
+  const handleOpenModalMod = (id, nome, descrizione, prezzo, tipo) => {
     setIdToDelMod(id);
-    setModData({ nome: nome, descrizione: descrizione, prezzo: prezzo, tipo: tipo });
+    setModData({
+      nome: nome,
+      descrizione: descrizione,
+      prezzo: prezzo,
+      tipo: tipo,
+    });
     setOpenModalMod(true);
   };
   //------------------------------------------------------
@@ -156,6 +161,25 @@ function ProductList() {
     }
   };
   //---------------------------------------------------------------------
+  //Modifica prodotto----------------------------------------------------
+  const handleModProd = async (e) => {
+    e.preventDefault();
+    try {
+      const mod = await axios.put(
+        `http://127.0.0.1:3000/prodotti/${idToDelMod}`,
+        {
+          nome: modData.nome,
+          descrizione: modData.descrizione,
+          prezzo_unitario: modData.prezzo,
+          tipo_prodotto: modData.tipo,
+        });
+        console.log(mod.status,`modifica effettuata con id ${idToDelMod}`)
+        handleShowProduct();
+        handleCloseModalMod();
+    } catch (error) {
+      console.error("Modifica non riuscita", error);
+    }
+  };
 
   return (
     <>
@@ -186,31 +210,31 @@ function ProductList() {
       <Dialog open={openModalMod} onClose={handleCloseModalMod}>
         <DialogTitle>Modifica prodotto</DialogTitle>
         <DialogContent>
-          <form id="subscription-form" onSubmit={handleNewProd}>
+          <form id="subscription-form" onSubmit={handleModProd}>
             <TextField
               autoFocus
               required
               margin="dense"
               id="name"
               name="text"
-              label={modData.nome}
+              label="Modifica nome"
               type="text"
               fullWidth
               variant="standard"
-              value={nameProd}
-              onChange={(e) => setNameProd(e.target.value)}
+              value={modData.nome}
+              onChange={(e) => setModData({...modData, nome: e.target.value})}
             />
             <TextField
               autoFocus
               margin="dense"
               id="descrizione"
               name="descrizione"
-              label={modData.descrizione}
+              label="Modifica descrizione"
               type="text"
               fullWidth
               variant="standard"
-              value={descProd}
-              onChange={(e) => setDescProd(e.target.value)}
+              value={modData.descrizione}
+              onChange={(e) => setModData({...modData, descrizione: e.target.value})}
             />
             <TextField
               autoFocus
@@ -218,12 +242,12 @@ function ProductList() {
               margin="dense"
               id="prezzo"
               name="email"
-              label={modData.prezzo}
+              label="Modifica prezzo"
               type="number"
               fullWidth
               variant="standard"
-              value={priceProd}
-              onChange={(e) => setPriceProd(e.target.value)}
+              value={modData.prezzo}
+              onChange={(e) => setModData({...modData, prezzo: e.target.value})}
             />
             <InputLabel id="demo-simple-select-label">
               Cibo / Bevanda
@@ -231,13 +255,13 @@ function ProductList() {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              label={modData.tipo}
+              label="Seleziona tipo"
               sx={{ minWidth: 250 }}
-              value={typeProd}
-              onChange={(e) => setTypeProd(e.target.value)}
+              value={modData.tipo}
+              onChange={(e) => setModData({...modData, tipo: e.target.value})}
             >
               <MenuItem value="cibo">Cibo</MenuItem>
-              <MenuItem value="Bevanda">Bevanda</MenuItem>
+              <MenuItem value="bevanda">Bevanda</MenuItem>
             </Select>
           </form>
         </DialogContent>
@@ -334,7 +358,7 @@ function ProductList() {
                 onChange={(e) => setTypeProd(e.target.value)}
               >
                 <MenuItem value="cibo">Cibo</MenuItem>
-                <MenuItem value="Bevanda">Bevanda</MenuItem>
+                <MenuItem value="bevanda">Bevanda</MenuItem>
               </Select>
             </form>
           </DialogContent>
@@ -386,7 +410,16 @@ function ProductList() {
                   <TableCell>{d.nome}</TableCell>
                   <TableCell>€ {d.prezzo_unitario}</TableCell>
                   <TableCell>
-                    <ModeIcon></ModeIcon>
+                    <ModeIcon
+                    onClick={() =>
+                        handleOpenModalMod(
+                          d.id_prodotto,
+                          d.nome,
+                          d.descrizione,
+                          d.prezzo_unitario,
+                          d.tipo_prodotto,
+                        )
+                      }></ModeIcon>
                     <DeleteIcon
                       onClick={() => handleOpenAlert(d.id_prodotto, d.nome)}
                       className="delete"
@@ -400,7 +433,16 @@ function ProductList() {
                   <TableCell>{a.nome}</TableCell>
                   <TableCell>€ {a.prezzo_unitario}</TableCell>
                   <TableCell>
-                    <ModeIcon></ModeIcon>
+                    <ModeIcon
+                    onClick={() =>
+                        handleOpenModalMod(
+                          a.id_prodotto,
+                          a.nome,
+                          a.descrizione,
+                          a.prezzo_unitario,
+                          a.tipo_prodotto,
+                        )
+                      }></ModeIcon>
                     <DeleteIcon
                       onClick={() => handleOpenAlert(a.id_prodotto, a.nome)}
                       className="delete"
