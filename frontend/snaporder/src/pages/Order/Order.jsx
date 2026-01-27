@@ -24,8 +24,9 @@ import MenuItem from "@mui/material/MenuItem";
 import EuroIcon from "@mui/icons-material/Euro";
 import CloseIcon from "@mui/icons-material/Close";
 import ModalOrder from "../../components/modalOrder/ModalOrder";
+import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Order() {
   const navigate = useNavigate();
@@ -34,13 +35,18 @@ function Order() {
   console.log(idOrdine);
   const [selectedType, setSelectedType] = useState("Cibo");
   const [openModalOrder, setOpenModalOrder] = useState(false);
+  const [details, setDetails] = useState([]);
 
-  //handle per aprire la modale di inserimento tavoli
+  useEffect(()=>{
+    handleDetails()
+  },[]);
+
+  //handle per aprire la modale di inserimento dettaglio
   const handleOpenModal = () => {
     setOpenModalOrder(true);
   };
   //---------------------------------------------------
-  //handle per chiudere la modale di inserimento tavoli
+  //handle per chiudere la modale di inserimento dettaglio
   const handleCloseModal = () => {
     setOpenModalOrder(false);
   };
@@ -52,6 +58,15 @@ function Order() {
       console.log(newType);
     }
   };
+  //handle per popolare la tabella dettagli ordine
+  const handleDetails = async()=>{
+    try{
+      const res = await axios.get("http://127.0.0.1:3000/dettagli");
+      setDetails(res.data);
+    }catch(error){
+      console.error("impossibile recuperare dettagli", error);
+    }
+  }
 
   return (
     <>
@@ -94,90 +109,19 @@ function Order() {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
+          {details.map((d)=>(
+            <TableRow>
             <TableCell component="th" scope="row">
-              Acqua naturale
+              {d.nome_prodotti}
             </TableCell>
-            <TableCell align="left">2</TableCell>
+            <TableCell align="left">{d.quantita}</TableCell>
             <TableCell align="right">erer</TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              Acqua naturale
-            </TableCell>
-            <TableCell align="left">2</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
+
+
+          ))}
+          
+          
         </TableBody>
       </Table>
       <div className="container-add">

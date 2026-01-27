@@ -14,5 +14,8 @@ app.use('/ordinazioni',ordinazioniRouter);
 //route per prodotti
 const prodottiRouter = require('./routes/prodotti.js');
 app.use('/prodotti',prodottiRouter);
+//route per dettagli ordinazione
+const dettagliRouter = require('./routes/dettagliOrdinazione.js');
+app.use('/dettagli',dettagliRouter);
 
 app.listen(3000, () => console.log("server partito su porta 3000"));
