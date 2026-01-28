@@ -387,6 +387,7 @@ function ProductList() {
                   <TableCell>€ {f.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon
+                    className="mod"
                       onClick={() =>
                         handleOpenModalMod(
                           f.id_prodotto,

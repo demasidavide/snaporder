@@ -16,4 +16,8 @@
 }
 .delete {
     margin-left: 10px;
+    color:var(--warning);
+}
+.mod{
+    color: var(--focus);
 }

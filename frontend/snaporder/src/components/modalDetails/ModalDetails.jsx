@@ -52,13 +52,13 @@ function ModalDetails({ open, onClose, idOrdine }) {
     e.preventDefault();
     try {
       const ins = await axios.post(
-        "http://127.0.0.1:3000/dettagli_ordinazione/",
+        "http://127.0.0.1:3000/dettagli",
         {
           id_ordinazione: idOrdine,
           id_prodotto: selectedProduct.id_prodotto,
-          quantita: qta,
+          quantita: parseInt(qta),
           prezzo_unitario: selectedProduct.prezzo_unitario,
-          subtotale: qta * selectedProduct.prezzo_unitario,
+          subtotale: parseInt(qta) * selectedProduct.prezzo_unitario,
         },
       );
       console.log("Dettaglio inserito", ins.data);

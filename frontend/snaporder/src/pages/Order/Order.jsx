@@ -24,8 +24,9 @@ import EuroIcon from "@mui/icons-material/Euro";
 import CloseIcon from "@mui/icons-material/Close";
 import ModalDetails from "../../components/modalDetails/ModalDetails";
 import ModalOrder from "../../components/modalOrder/ModalOrder";
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import ModeIcon from "@mui/icons-material/Mode";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
@@ -39,9 +40,9 @@ function Order() {
   const [openModalOrder, setOpenModalOrder] = useState(false);
   const [details, setDetails] = useState([]);
 
-  useEffect(()=>{
-    handleDetails()
-  },[]);
+  useEffect(() => {
+    handleDetails();
+  }, [openModalOrder,selectedType]);
 
   //handle per aprire la modale di inserimento dettaglio
   const handleOpenModal = () => {
@@ -52,23 +53,31 @@ function Order() {
   const handleCloseModal = () => {
     setOpenModalOrder(false);
   };
-  //----------------------------------------------------
-  //handle per gestire selezione bevande/cibo
+  //-------------------------------------------------------
+  //handle per gestire selezione bevande/cibo--------------
   const handleTypeChange = (e, newType) => {
     if (newType !== null) {
       setSelectedType(newType);
       console.log(newType);
     }
   };
-  //handle per popolare la tabella dettagli ordine
-  const handleDetails = async()=>{
-    try{
-      const res = await axios.get("http://127.0.0.1:3000/dettagli");
+  //------------------------------------------------------
+  //handle per popolare la tabella dettagli ordine-------------------
+  const handleDetails = async () => {
+    try {
+      if(selectedType === "Bevande"){
+      const res = await axios.get("http://127.0.0.1:3000/dettagli/drink");
       setDetails(res.data);
-    }catch(error){
+      }else{
+        const res = await axios.get("http://127.0.0.1:3000/dettagli/food");
+      setDetails(res.data);
+      }
+    } catch (error) {
       console.error("impossibile recuperare dettagli", error);
     }
-  }
+  };
+  //------------------------------------------------------------------
+  //------------------------------------------------------------------
 
   return (
     <>
@@ -108,23 +117,22 @@ function Order() {
           <TableRow>
             <TableCell>Descrizione</TableCell>
             <TableCell align="left">Q.ta</TableCell>
-            <TableCell align="right"></TableCell>
+            <TableCell align="right">Azioni</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {details.map((d)=>(
+          {details.map((d) => (
             <TableRow>
-            <TableCell component="th" scope="row">
-              {d.nome_prodotti}
-            </TableCell>
-            <TableCell align="left">{d.quantita}</TableCell>
-            <TableCell align="right">erer</TableCell>
-          </TableRow>
-
-
+              <TableCell component="th" scope="row">
+                {d.nome_prodotti}
+              </TableCell>
+              <TableCell align="left">{d.quantita}</TableCell>
+              <TableCell align="right">
+                <ModeIcon className="mod"></ModeIcon>
+                <DeleteIcon className="delete"></DeleteIcon>
+              </TableCell>
+            </TableRow>
           ))}
-          
-          
         </TableBody>
       </Table>
       <div className="container-add">
