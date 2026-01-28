@@ -20,6 +20,7 @@ function ModalDetails({ open, onClose, idOrdine }) {
   const [qta, setQta] = useState(1);
   const [priceProd, setPriceProd] = useState("");
   const [typeProd, setTypeProd] = useState("cibo");
+  const [note, setNote] = useState("");
 
   //Lettura prodotti -cibi-bevande-tutti------------------
   const handleShowProduct = async () => {
@@ -51,16 +52,14 @@ function ModalDetails({ open, onClose, idOrdine }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const ins = await axios.post(
-        "http://127.0.0.1:3000/dettagli",
-        {
-          id_ordinazione: idOrdine,
-          id_prodotto: selectedProduct.id_prodotto,
-          quantita: parseInt(qta),
-          prezzo_unitario: selectedProduct.prezzo_unitario,
-          subtotale: parseInt(qta) * selectedProduct.prezzo_unitario,
-        },
-      );
+      const ins = await axios.post("http://127.0.0.1:3000/dettagli", {
+        id_ordinazione: idOrdine,
+        id_prodotto: selectedProduct.id_prodotto,
+        quantita: parseInt(qta),
+        prezzo_unitario: selectedProduct.prezzo_unitario,
+        subtotale: parseInt(qta) * selectedProduct.prezzo_unitario,
+        note: note
+      });
       console.log("Dettaglio inserito", ins.data);
       onClose();
     } catch (error) {
@@ -69,8 +68,8 @@ function ModalDetails({ open, onClose, idOrdine }) {
   };
   //--------------------------------------------------------------------
   useEffect(() => {
-      handleShowProduct();
-  }, [open,type]);
+    handleShowProduct();
+  }, [open, type]);
 
   return (
     <>
@@ -159,6 +158,18 @@ function ModalDetails({ open, onClose, idOrdine }) {
                 </Select>
               </>
             )}
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              name="text"
+              label="NOTE"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={note}
+              onChange={(e)=>setNote(e.target.value)}
+            />
 
             <label className="label-number">Quantità</label>
             <input

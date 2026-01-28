@@ -114,7 +114,7 @@ function Order() {
         open={openAlert}
         onClose={handleCloseAlert}
         name={prodSelected.map((p) => p.nome)}
-        onDelete={()=>handleDelete(idToDelMod)}
+        onDelete={() => handleDelete(idToDelMod)}
       ></ModalDelete>
       {/* fine modale cancellazione */}
       <ToggleButtonGroup
@@ -158,16 +158,28 @@ function Order() {
         </TableHead>
         <TableBody>
           {details.map((d) => (
-            <TableRow>
-              <TableCell component="th" scope="row">
-                {d.nome_prodotti}
-              </TableCell>
-              <TableCell align="left">{d.quantita}</TableCell>
-              <TableCell align="right">
-                <ModeIcon className="mod"></ModeIcon>
-                <DeleteIcon className="delete" onClick={()=> handleOpenAlert(d.id_dettaglio,d.nome_prodotti)}></DeleteIcon>
-              </TableCell>
-            </TableRow>
+            <>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  {d.nome_prodotti}
+                </TableCell>
+                <TableCell align="left">{d.quantita}</TableCell>
+                <TableCell align="right">
+                  <ModeIcon className="mod"></ModeIcon>
+                  <DeleteIcon
+                    className="delete"
+                    onClick={() =>
+                      handleOpenAlert(d.id_dettaglio, d.nome_prodotti)
+                    }
+                  ></DeleteIcon>
+                </TableCell>
+              </TableRow>
+              {d.note && (
+                <TableRow className="note">
+                  <TableCell colSpan={3}>↑ Note: {d.note}</TableCell>
+                </TableRow>
+              )}
+            </>
           ))}
         </TableBody>
       </Table>

@@ -33,5 +33,11 @@
   border:solid 2px var(--neutral);
   border-radius: 10px;
 }
+.note{
+  color:var(--warning)!important;
+  border-left:solid 2px var(--warning);
+  border-right:solid 2px var(--warning);
+  border-bottom:solid 2px var(--warning)!important;
+}
 
 
