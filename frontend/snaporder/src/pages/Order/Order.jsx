@@ -37,17 +37,43 @@ function Order() {
   const location = useLocation();
   const idOrdine = location.state?.id;
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
+  const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
   const [selectedType, setSelectedType] = useState("Cibo");
   const [openModalOrder, setOpenModalOrder] = useState(false);
   const [details, setDetails] = useState([]);
   const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
   const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
+  const [modData, setModData] = useState({
+    id: "",
+    nome: "",
+    note: "",
+    qta: "",
+  });
+  const [selectedRows, setSelectedRows] = useState(() => {
+    const saved = localStorage.getItem("selectedRows");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     handleDetails();
   }, [openModalOrder, selectedType]);
 
-  //gestione apertura alert cancellazione---------------
+  //useEffect per salvare i selezionati-------------------------------
+  //valutare salvataggio in db
+  useEffect(() => {
+    localStorage.setItem("selectedRows", JSON.stringify(selectedRows));
+  }, [selectedRows]);
+  //-------------------------------------------------------------------
+  //Gestione selezione righe selezionate e salvataggio-----------------
+  const handleRowClick = (id) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    } else {
+      setSelectedRows([...selectedRows, id]);
+    }
+  };
+  //-------------------------------------------------------------------
+  //gestione apertura alert cancellazione------------------------------
   const handleOpenAlert = (id, nome) => {
     setIdToDelMod(id);
     setProdSelected([{ nome }]);
@@ -58,13 +84,29 @@ function Order() {
     setOpenAlert(false);
     setIdToDelMod();
   };
-  //---------------------------------------------------
-  //handle per aprire la modale di inserimento dettaglio
+  //-------------------------------------------------------------------
+  //handle per aprire la modale di modifica porodotti------------------
+  const handleOpenModalMod = (id, nome, note, qta) => {
+    setIdToDelMod(id);
+    setModData({
+      nome: nome,
+      note: note,
+      quantita: qta,
+    });
+    setOpenModalMod(true);
+  };
+  //-------------------------------------------------------------------
+  //handle per chiudere la modale di modifica porodotti
+  const handleCloseModalMod = () => {
+    setOpenModalMod(false);
+  };
+  //-------------------------------------------------------------------
+  //handle per aprire la modale di inserimento dettaglio---------------
   const handleOpenModal = () => {
     setOpenModalOrder(true);
   };
-  //---------------------------------------------------
-  //handle per chiudere la modale di inserimento dettaglio
+  //-------------------------------------------------------------------
+  //handle per chiudere la modale di inserimento dettaglio-------------
   const handleCloseModal = () => {
     setOpenModalOrder(false);
   };
@@ -96,7 +138,6 @@ function Order() {
   //handle per cancellare dettaglio-----------------------------------
   const handleDelete = async (id) => {
     try {
-      console.log(id);
       const del = await axios.delete(`http://127.0.0.1:3000/dettagli/${id}`);
       console.log("cancellazione ok di", id);
       handleDetails();
@@ -105,6 +146,23 @@ function Order() {
       console.error("Impossibile cancellare f", error);
     }
   };
+  //------------------------------------------------------------------
+  //handle per modificare i dati dettagli-----------------------------
+  const handleModDetails = async(e)=>{
+    e.preventDefault();
+    try{
+      const mod = await axios.put(`http://127.0.0.1:3000/dettagli/${idToDelMod}`,{
+        note: modData.note,
+        quantita: modData.quantita
+      })
+      console.log("Modifica avvenuta correttamente per id", idToDelMod);
+      handleDetails();
+      handleCloseModalMod();
+
+    }catch (error) {
+      console.error("Impossibile cancellare f", error);
+    }
+  }
   //------------------------------------------------------------------
 
   return (
@@ -117,6 +175,53 @@ function Order() {
         onDelete={() => handleDelete(idToDelMod)}
       ></ModalDelete>
       {/* fine modale cancellazione */}
+      {/* inizio modale di modifica */}
+      <Dialog open={openModalMod} onClose={handleCloseModalMod}>
+        <DialogTitle>Modifica prodotto</DialogTitle>
+        <DialogContent>
+          <form id="subscription-form" onSubmit={handleModDetails}>
+            <TextField
+              id="outlined-read-only-input"
+              defaultValue={modData.nome}
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
+              value={modData.nome}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="descrizione"
+              name="descrizione"
+              label="Modifica Note"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={modData.note}
+              onChange={(e) => setModData({ ...modData, note: e.target.value })}
+            />
+            <label className="label-number">Quantità</label>
+            <input
+              type="number"
+              className="input-number"
+              min={1}
+              max={20}
+              value={modData.quantita}  
+              onChange={(e) => setModData({ ...modData, quantita: e.target.value })}
+            ></input>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseModalMod()}>Indietro</Button>
+          <Button type="submit" form="subscription-form">
+            Aggiungi
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* fine modale di modifica */}
       <ToggleButtonGroup
         onChange={handleTypeChange}
         exclusive
@@ -160,12 +265,27 @@ function Order() {
           {details.map((d) => (
             <>
               <TableRow>
-                <TableCell component="th" scope="row">
+                <TableCell
+                  onClick={() => handleRowClick(d.id_dettaglio)}
+                  style={{
+                    backgroundColor: selectedRows.includes(d.id_dettaglio)
+                      ? "#10b981"
+                      : "transparent",
+                    textDecoration: selectedRows.includes(d.id_dettaglio)
+                      ? "line-through"
+                      : "none",
+                  }}
+                  component="th"
+                  scope="row"
+                >
                   {d.nome_prodotti}
                 </TableCell>
                 <TableCell align="left">{d.quantita}</TableCell>
                 <TableCell align="right">
-                  <ModeIcon className="mod"></ModeIcon>
+                  <ModeIcon
+                    className="mod"
+                    onClick={() => handleOpenModalMod(d.id_dettaglio,d.nome_prodotti,d.note,d.quantita,)}
+                  ></ModeIcon>
                   <DeleteIcon
                     className="delete"
                     onClick={() =>

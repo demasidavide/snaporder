@@ -140,7 +140,6 @@ function ProductList() {
         prezzo_unitario: priceProd,
         tipo_prodotto: typeProd,
       });
-      console.log(ins);
       handleCloseModal();
     } catch (error) {
       console.log(error);
@@ -348,7 +347,7 @@ function ProductList() {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => handleCloseModal}>Indietro</Button>
+            <Button onClick={() => handleCloseModal()}>Indietro</Button>
             <Button type="submit" form="subscription-form">
               Aggiungi
             </Button>
