@@ -12,7 +12,6 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -23,7 +22,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import EuroIcon from "@mui/icons-material/Euro";
 import CloseIcon from "@mui/icons-material/Close";
+import ModalDetails from "../../components/modalDetails/ModalDetails";
 import ModalOrder from "../../components/modalOrder/ModalOrder";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
@@ -91,9 +93,10 @@ function Order() {
       <svg className="close" onClick={() => navigate("/home")}>
         <CloseIcon></CloseIcon>
       </svg>
-      <ModalOrder
+      <ModalDetails
         open={openModalOrder}
         onClose={handleCloseModal}
+        idOrdine={idOrdine}
       />
       <Table
         className="table-body-order"
