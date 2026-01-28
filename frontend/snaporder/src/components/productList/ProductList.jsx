@@ -22,10 +22,10 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import ModeIcon from "@mui/icons-material/Mode";
+import ModalDelete from "../modalDelete/ModalDelete";
 import Slide from "@mui/material/Slide";
 import axios from "axios";
-import { useState, UseEffect } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function ProductList() {
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
@@ -184,27 +184,12 @@ function ProductList() {
   return (
     <>
       {/* inizio modale cancellazione */}
-      <Dialog
-        open={openAlert}
-        onClose={handleCloseAlert}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Elimina il prodotto ?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {prodSelected.map((p) => p.nome)}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAlert}>Indietro</Button>
-          <Button sx={{ color: "red" }} onClick={handleDelete} autoFocus>
-            Elimina
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ModalDelete
+      open={openAlert}
+      onClose={handleCloseAlert}
+      name={prodSelected.map((p) => p.nome)}
+      onDelete={handleDelete}
+      ></ModalDelete>
       {/* Fine modale cancellazione */}
       {/* Inizio modale modifica */}
       <Dialog open={openModalMod} onClose={handleCloseModalMod}>

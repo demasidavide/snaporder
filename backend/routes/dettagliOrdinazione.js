@@ -7,7 +7,8 @@ router.get("/food", async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT prodotti.nome as nome_prodotti, 
-      dettagli_ordinazione.quantita as quantita 
+      dettagli_ordinazione.quantita as quantita,
+      dettagli_ordinazione.id_dettaglio as id_dettaglio 
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "cibo"`);
@@ -21,7 +22,8 @@ router.get("/drink", async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT prodotti.nome as nome_prodotti, 
-      dettagli_ordinazione.quantita as quantita 
+      dettagli_ordinazione.quantita as quantita,
+      dettagli_ordinazione.id_dettaglio as id_dettaglio 
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "bevanda"`);
@@ -52,7 +54,28 @@ try{
     res.status(500).json({ error: "Errore nel Database" });
   }
 })
-
+//DELETE pewr cancellazione con id
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!id || isNaN(id)) {
+      return res
+        .status(400)
+        .json({ error: `ID ${id} non trovato o non valido` });
+    }
+    const result = await pool.query(
+      `
+            DELETE FROM dettagli_ordinazione WHERE id_dettaglio = ?`,
+      [id],
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Id non trovato" });
+    }
+    res.status(204).send();
+  } catch (e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+});
 
 
 module.exports = router;

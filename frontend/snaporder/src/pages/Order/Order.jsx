@@ -26,6 +26,7 @@ import ModalDetails from "../../components/modalDetails/ModalDetails";
 import ModalOrder from "../../components/modalOrder/ModalOrder";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import ModalDelete from "../../components/modalDelete/ModalDelete";
 import ModeIcon from "@mui/icons-material/Mode";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
@@ -35,15 +36,29 @@ function Order() {
   const navigate = useNavigate();
   const location = useLocation();
   const idOrdine = location.state?.id;
-  console.log(idOrdine);
+  const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
   const [selectedType, setSelectedType] = useState("Cibo");
   const [openModalOrder, setOpenModalOrder] = useState(false);
   const [details, setDetails] = useState([]);
+  const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
+  const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
 
   useEffect(() => {
     handleDetails();
-  }, [openModalOrder,selectedType]);
+  }, [openModalOrder, selectedType]);
 
+  //gestione apertura alert cancellazione---------------
+  const handleOpenAlert = (id, nome) => {
+    setIdToDelMod(id);
+    setProdSelected([{ nome }]);
+    setOpenAlert(true);
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+    setIdToDelMod();
+  };
+  //---------------------------------------------------
   //handle per aprire la modale di inserimento dettaglio
   const handleOpenModal = () => {
     setOpenModalOrder(true);
@@ -65,22 +80,43 @@ function Order() {
   //handle per popolare la tabella dettagli ordine-------------------
   const handleDetails = async () => {
     try {
-      if(selectedType === "Bevande"){
-      const res = await axios.get("http://127.0.0.1:3000/dettagli/drink");
-      setDetails(res.data);
-      }else{
+      if (selectedType === "Bevande") {
+        const res = await axios.get("http://127.0.0.1:3000/dettagli/drink");
+        setDetails(res.data);
+      } else {
         const res = await axios.get("http://127.0.0.1:3000/dettagli/food");
-      setDetails(res.data);
+        setDetails(res.data);
+        console.log(res.data);
       }
     } catch (error) {
       console.error("impossibile recuperare dettagli", error);
     }
   };
   //------------------------------------------------------------------
+  //handle per cancellare dettaglio-----------------------------------
+  const handleDelete = async (id) => {
+    try {
+      console.log(id);
+      const del = await axios.delete(`http://127.0.0.1:3000/dettagli/${id}`);
+      console.log("cancellazione ok di", id);
+      handleDetails();
+      handleCloseAlert();
+    } catch (error) {
+      console.error("Impossibile cancellare f", error);
+    }
+  };
   //------------------------------------------------------------------
 
   return (
     <>
+      {/* modale di cancellazione */}
+      <ModalDelete
+        open={openAlert}
+        onClose={handleCloseAlert}
+        name={prodSelected.map((p) => p.nome)}
+        onDelete={()=>handleDelete(idToDelMod)}
+      ></ModalDelete>
+      {/* fine modale cancellazione */}
       <ToggleButtonGroup
         onChange={handleTypeChange}
         exclusive
@@ -129,7 +165,7 @@ function Order() {
               <TableCell align="left">{d.quantita}</TableCell>
               <TableCell align="right">
                 <ModeIcon className="mod"></ModeIcon>
-                <DeleteIcon className="delete"></DeleteIcon>
+                <DeleteIcon className="delete" onClick={()=> handleOpenAlert(d.id_dettaglio,d.nome_prodotti)}></DeleteIcon>
               </TableCell>
             </TableRow>
           ))}
