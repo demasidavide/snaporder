@@ -36,6 +36,7 @@ function Order() {
   const navigate = useNavigate();
   const location = useLocation();
   const idOrdine = location.state?.id;
+  console.log(idOrdine)
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
   const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
   const [selectedType, setSelectedType] = useState("Cibo");
@@ -48,7 +49,6 @@ function Order() {
     nome: "",
     note: "",
     qta: "",
-
   });
   const [selectedRows, setSelectedRows] = useState(() => {
     const saved = localStorage.getItem("selectedRows");
@@ -124,10 +124,10 @@ function Order() {
   const handleDetails = async () => {
     try {
       if (selectedType === "Bevande") {
-        const res = await axios.get("http://127.0.0.1:3000/dettagli/drink");
+        const res = await axios.get(`http://127.0.0.1:3000/dettagli/drink/${idOrdine}`);
         setDetails(res.data);
       } else {
-        const res = await axios.get("http://127.0.0.1:3000/dettagli/food");
+        const res = await axios.get(`http://127.0.0.1:3000/dettagli/food/${idOrdine}`);
         setDetails(res.data);
         console.log(res.data);
       }

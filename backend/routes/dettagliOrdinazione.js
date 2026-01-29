@@ -3,7 +3,8 @@ const pool = require("../connDb");
 const router = express.Router();
 
 //GET con join prodotti per tabella principale CIBO
-router.get("/food", async (req, res) => {
+router.get("/food/:id", async (req, res) => {
+  const {id} = req.params;
   try {
     const [rows] = await pool.query(`
       SELECT prodotti.nome as nome_prodotti, 
@@ -12,14 +13,16 @@ router.get("/food", async (req, res) => {
       dettagli_ordinazione.note as note 
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
-      WHERE tipo_prodotto = "cibo"`);
+      WHERE tipo_prodotto = "cibo"
+      and id_ordinazione = ?`,[id]);
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
   }
 });
 //GET con join prodotti per tabella principale BEVANDE
-router.get("/drink", async (req, res) => {
+router.get("/drink/:id", async (req, res) => {
+  const {id} = req.params;
   try {
     const [rows] = await pool.query(`
       SELECT prodotti.nome as nome_prodotti, 
@@ -28,7 +31,8 @@ router.get("/drink", async (req, res) => {
       dettagli_ordinazione.note as note 
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
-      WHERE tipo_prodotto = "bevanda"`);
+      WHERE tipo_prodotto = "bevanda"
+      and id_ordinazione = ?`,[id]);
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
