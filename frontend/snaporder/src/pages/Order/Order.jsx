@@ -314,7 +314,9 @@ function Order() {
         >
           <AddIcon />
         </Fab>
-        <Fab variant="extended">
+        <Fab variant="extended"
+        onClick={()=>navigate('/pay', {state:{ id : idOrdine }})}
+        >
           <EuroIcon sx={{ mr: 1 }} />
           Paga
         </Fab>

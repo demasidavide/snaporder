@@ -1,1 +1,64 @@
-@import '../../variables/variables.css';
+@import "../../variables/variables.css";
+
+.container-card-cash{
+    border-bottom: solid 1px var(--focus);
+    max-height: 70%;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+.container-checkbox{
+    margin-left: 15px;
+}
+.checkbox-cash{
+    color:var(--neutral)
+}
+
+.checkbox-cash .MuiCheckbox-root.Mui-checked {
+    color: var(--confirm);
+}
+.text-parziale {
+  margin-top: 50px;
+  width: 100px;
+}
+.text-parziale label {
+  color: var(--neutral); /* Colore del testo dell'etichetta */
+}
+.text-parziale .MuiOutlinedInput-root {
+  color: var(
+    --neutral
+  ); /* Usa una variabile esistente o un colore fisso come #ff0000 */
+}
+.submit-cash {
+  width: 300px;
+  background-color: var(--focus);
+  color: var(--neutral);
+  font-weight: bold;
+  margin-top: 20px !important;
+  margin-left: 11% !important;
+}
+.text-payment {
+  margin-top: 50px;
+  width: 300px;
+    margin-left: 11% !important;
+
+}
+.text-payment label {
+  color: var(--neutral); /* Colore del testo dell'etichetta */
+}
+.text-payment .MuiOutlinedInput-root {
+  color: var(
+    --neutral
+  ); /* Usa una variabile esistente o un colore fisso come #ff0000 */
+}
+
+.text-payment .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Colore del bordo */
+}
+
+.text-payment .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Bordo al hover */
+}
+
+.text-payment .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--neutral); /* Bordo quando focalizzato */
+}

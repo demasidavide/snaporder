@@ -55,7 +55,9 @@ router.get("/pay/:id", async (req, res) => {
       dettagli_ordinazione.id_dettaglio as id_dettaglio,
       dettagli_ordinazione.prezzo_unitario as prezzo_unitario, 
       dettagli_ordinazione.subtotale as subtotale,
-      ordinazioni.numero_persone as numero_persone
+      ordinazioni.numero_persone as numero_persone,
+      ordinazioni.posizione as posizione,
+      ordinazioni.nome_ordine as nome_ordine
       FROM dettagli_ordinazione 
       INNER JOIN prodotti ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       INNER JOIN ordinazioni ON ordinazioni.id_ordinazione = dettagli_ordinazione.id_ordinazione

@@ -13,12 +13,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import ModalTable from "../../components/modalTable/ModalTable";
 import CardCash from "../../components/cardCash/CardCash";
-import Cash from '../../components/cash/cash';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 function Home() {
-  const [selectArea, setSelectArea] = useState("Tavoli"); //stato passato da navbar
+  const location = useLocation();
+  const [selectArea, setSelectArea] = useState(location.state?.selectArea || "Tavoli"); //stato passato da navbar
   const [openModalAddTable, setOpenModalAddTable] = useState(false);
   const [table, setTable] = useState([]);
 
@@ -84,7 +85,7 @@ function Home() {
         )}
         {selectArea === "Cassa" && (
           <>
-            <div className="container-add"></div>
+            
             {table.map((t) => (
             <CardCash 
             key={t.id_ordinazione}

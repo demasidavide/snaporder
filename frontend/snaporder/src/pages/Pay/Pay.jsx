@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { DataGrid } from "@mui/x-data-grid";
 import TextField from "@mui/material/TextField";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
@@ -20,7 +18,7 @@ function Pay() {
   const totale = details
     .reduce((sum, d) => sum + parseFloat(d.subtotale || 0), 0)
     .toFixed(2);
-  const parziale = (totale / details[0]?.numero_persone).toFixed(2);
+  const parziale = (totale / details[0]?.numero_persone || 0).toFixed(2);
   const totaleSelezionato = selectedRows
     .reduce((sum, row) => sum + parseFloat(row.prezzo || 0), 0)
     .toFixed(2);
@@ -45,14 +43,17 @@ function Pay() {
       <div className="container-card-cash">
         <div className="container description-table">
           <span className="info-text">
-            Nome: <span className="info-content">Marco</span>
+            Nome: <span className="info-content">{details[0]?.nome_ordine}</span>
           </span>
+          <svg className="close" onClick={() => navigate("/home",{state:{selectArea: "Cassa" }})}>
+                  <CloseIcon></CloseIcon>
+                </svg>
           <br></br>
           <span className="info-text">
-            Persone:<span className="info-content">8</span>
+            Persone:<span className="info-content">{details[0]?.numero_persone}</span>
           </span>
           <span className="info-text">
-            Posizione: <span className="info-content">Sopra</span>
+            Posizione: <span className="info-content">{details[0]?.posizione}</span>
           </span>
           <Paper sx={{ height: 500, width: "100%" }}>
             <DataGrid
