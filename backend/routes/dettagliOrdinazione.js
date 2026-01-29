@@ -84,28 +84,45 @@ router.delete("/:id", async (req, res) => {
   }
 });
 //PUT per modifica dettagli con id
-router.put('/:id', async(req,res)=>{
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { note, quantita } = req.body;
-  try{
-    if(!id || isNaN(id)){
-      return res.status(400).json({error: "Id non trovato o non valido"});
+  try {
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ error: "Id non trovato o non valido" });
     }
-    if (!note || !quantita) {
-      return res.status(400).json({ error: "Dati mancanti o non validi" });
+    if (quantita === undefined || quantita === null || quantita <= 0) {
+      return res.status(400).json({ error: "Quantità non valida" });
     }
-    const [result] = await pool.query(`UPDATE dettagli_ordinazione
-SET note = ?, quantita = ?
-WHERE id_dettaglio = ?`, 
-      [note, quantita, id]);
-    
+
+    // Recupero il prezzo unitario dal database
+    const [rows] = await pool.query(
+      `SELECT prezzo_unitario FROM dettagli_ordinazione WHERE id_dettaglio = ?`,
+      [id],
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Prodotto non trovato" });
+    }
+
+    // Calcolo il subtotale
+    const prezzo_unitario = rows[0].prezzo_unitario;
+    const subtotale = quantita * prezzo_unitario;
+
+    const [result] = await pool.query(
+      `UPDATE dettagli_ordinazione
+SET note = ?, quantita = ?, subtotale = ?
+WHERE id_dettaglio = ?`,
+      [note, quantita, subtotale, id],
+    );
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Prodotto non trovato" });
     }
     res.status(200).json({ message: "Prodotto aggiornato con successo" });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
   }
-})
+});
 
 module.exports = router;

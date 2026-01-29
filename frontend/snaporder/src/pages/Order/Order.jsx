@@ -48,6 +48,7 @@ function Order() {
     nome: "",
     note: "",
     qta: "",
+
   });
   const [selectedRows, setSelectedRows] = useState(() => {
     const saved = localStorage.getItem("selectedRows");
@@ -150,9 +151,10 @@ function Order() {
   //handle per modificare i dati dettagli-----------------------------
   const handleModDetails = async(e)=>{
     e.preventDefault();
+    console.log(idToDelMod)
     try{
       const mod = await axios.put(`http://127.0.0.1:3000/dettagli/${idToDelMod}`,{
-        note: modData.note,
+        note: modData.note || "",
         quantita: modData.quantita
       })
       console.log("Modifica avvenuta correttamente per id", idToDelMod);
@@ -160,7 +162,7 @@ function Order() {
       handleCloseModalMod();
 
     }catch (error) {
-      console.error("Impossibile cancellare f", error);
+      console.error("Impossibile modificare f", error);
     }
   }
   //------------------------------------------------------------------
@@ -216,7 +218,7 @@ function Order() {
         <DialogActions>
           <Button onClick={() => handleCloseModalMod()}>Indietro</Button>
           <Button type="submit" form="subscription-form">
-            Aggiungi
+            Modifica
           </Button>
         </DialogActions>
       </Dialog>
