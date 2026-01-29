@@ -13,6 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import ModalTable from "../../components/modalTable/ModalTable";
 import CardCash from "../../components/cardCash/CardCash";
+import Cash from '../../components/cash/cash';
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -84,8 +85,15 @@ function Home() {
         {selectArea === "Cassa" && (
           <>
             <div className="container-add"></div>
-            <CardCash></CardCash>
-            <CardCash></CardCash>
+            {table.map((t) => (
+            <CardCash 
+            key={t.id_ordinazione}
+                name={t.nome_ordine}
+                num={t.numero_persone}
+                located={t.posizione}
+                id = {t.id_ordinazione}
+            ></CardCash>
+            ))}
           </>
         )}
       </div>

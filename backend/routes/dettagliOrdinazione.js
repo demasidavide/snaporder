@@ -4,9 +4,10 @@ const router = express.Router();
 
 //GET con join prodotti per tabella principale CIBO
 router.get("/food/:id", async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
-    const [rows] = await pool.query(`
+    const [rows] = await pool.query(
+      `
       SELECT prodotti.nome as nome_prodotti, 
       dettagli_ordinazione.quantita as quantita,
       dettagli_ordinazione.id_dettaglio as id_dettaglio,
@@ -14,7 +15,9 @@ router.get("/food/:id", async (req, res) => {
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "cibo"
-      and id_ordinazione = ?`,[id]);
+      and id_ordinazione = ?`,
+      [id],
+    );
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
@@ -22,9 +25,10 @@ router.get("/food/:id", async (req, res) => {
 });
 //GET con join prodotti per tabella principale BEVANDE
 router.get("/drink/:id", async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
-    const [rows] = await pool.query(`
+    const [rows] = await pool.query(
+      `
       SELECT prodotti.nome as nome_prodotti, 
       dettagli_ordinazione.quantita as quantita,
       dettagli_ordinazione.id_dettaglio as id_dettaglio,
@@ -32,12 +36,39 @@ router.get("/drink/:id", async (req, res) => {
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "bevanda"
-      and id_ordinazione = ?`,[id]);
+      and id_ordinazione = ?`,
+      [id],
+    );
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
   }
 });
+//get con join prodotti e ordinazioni per tabella pay in pay.jsx
+router.get("/pay/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query(
+      `
+      SELECT prodotti.nome as nome_prodotti, 
+      dettagli_ordinazione.quantita as quantita,
+      dettagli_ordinazione.id_dettaglio as id_dettaglio,
+      dettagli_ordinazione.prezzo_unitario as prezzo_unitario, 
+      dettagli_ordinazione.subtotale as subtotale,
+      ordinazioni.numero_persone as numero_persone
+      FROM dettagli_ordinazione 
+      INNER JOIN prodotti ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
+      INNER JOIN ordinazioni ON ordinazioni.id_ordinazione = dettagli_ordinazione.id_ordinazione
+      WHERE dettagli_ordinazione.status = "pending"
+      AND dettagli_ordinazione.id_ordinazione = ?`,
+      [id],
+    );
+    res.status(200).json(rows);
+  } catch (e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+});
+
 //POST inserimento dettaglio
 router.post("/", async (req, res) => {
   const {

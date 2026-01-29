@@ -222,7 +222,7 @@ function Cash() {
           },
         }}
       />
-      
+
       <Button
         type="submit"
         className="submit-cash"
@@ -232,15 +232,13 @@ function Cash() {
         Paga
       </Button>
       <TextField
-                  
-                  
-                  type="text"
-                  className="text-payment"
-                  id="outlined-basic"
-                  label="Saldo diverso"
-                  variant="outlined"
-                  margin="normal"
-                />
+        type="text"
+        className="text-payment"
+        id="outlined-basic"
+        label="Saldo diverso"
+        variant="outlined"
+        margin="normal"
+      />
     </>
   );
 }
