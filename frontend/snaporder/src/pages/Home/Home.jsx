@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import ModalTable from "../../components/modalTable/ModalTable";
+import CardCash from "../../components/cardCash/CardCash";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -83,8 +84,8 @@ function Home() {
         {selectArea === "Cassa" && (
           <>
             <div className="container-add"></div>
-            <CardTable></CardTable>
-            <CardTable></CardTable>
+            <CardCash></CardCash>
+            <CardCash></CardCash>
           </>
         )}
       </div>
