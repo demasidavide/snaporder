@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Sfondo cerchio -->
+  <circle cx="100" cy="100" r="95" fill="#FFF5E6" stroke="#8B4513" stroke-width="3"/>
+  
+  <!-- Tazza -->
+  <path d="M 60 90 Q 60 85 65 85 L 135 85 Q 140 85 140 90 L 135 130 Q 135 140 125 140 L 75 140 Q 65 140 65 130 Z" 
+        fill="#D2691E" stroke="#8B4513" stroke-width="2.5"/>
+  
+  <!-- Dettaglio interno tazza -->
+  <ellipse cx="100" cy="87" rx="32" ry="8" fill="#A0522D"/>
+  
+  <!-- Manico -->
+  <path d="M 140 95 Q 155 95 155 110 Q 155 125 140 125" 
+        fill="none" stroke="#8B4513" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Vapore 1 -->
+  <path d="M 80 70 Q 75 55 80 45" 
+        fill="none" stroke="#CD853F" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 80 70 Q 85 55 80 45" 
+        fill="none" stroke="#DEB887" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Vapore 2 -->
+  <path d="M 100 65 Q 95 50 100 40" 
+        fill="none" stroke="#CD853F" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 100 65 Q 105 50 100 40" 
+        fill="none" stroke="#DEB887" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Vapore 3 -->
+  <path d="M 120 70 Q 115 55 120 45" 
+        fill="none" stroke="#CD853F" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 120 70 Q 125 55 120 45" 
+        fill="none" stroke="#DEB887" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Piattino -->
+  <ellipse cx="100" cy="145" rx="45" ry="8" fill="#F4A460" stroke="#8B4513" stroke-width="2"/>
+  
+  <!-- Chicchi di caffè decorativi -->
+  <ellipse cx="30" cy="160" rx="5" ry="7" fill="#8B4513" transform="rotate(-20 30 160)"/>
+  <path d="M 30 155 Q 30 160 30 165" stroke="#5D3A1A" stroke-width="1"/>
+  
+  <ellipse cx="170" cy="165" rx="5" ry="7" fill="#8B4513" transform="rotate(25 170 165)"/>
+  <path d="M 170 160 Q 170 165 170 170" stroke="#5D3A1A" stroke-width="1"/>
+</svg>

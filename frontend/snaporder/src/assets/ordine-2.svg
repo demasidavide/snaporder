@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Sfondo gradiente -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8F5E9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C8E6C9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="drinkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB74D;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FF6F00;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sfondo -->
+  <rect width="200" height="200" rx="20" fill="url(#bgGrad)"/>
+  
+  <!-- Bicchiere Martini -->
+  <path d="M 70 60 L 100 120 L 100 160 M 130 60 L 100 120" 
+        stroke="#455A64" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M 70 60 L 130 60 L 100 120 Z" 
+        fill="none" stroke="#37474F" stroke-width="3"/>
+  
+  <!-- Liquido -->
+  <path d="M 73 65 L 127 65 L 100 115 Z" 
+        fill="url(#drinkGrad)" opacity="0.85"/>
+  
+  <!-- Riflesso sul bicchiere -->
+  <path d="M 75 70 L 80 70 L 95 105" 
+        stroke="#FFF" stroke-width="2" opacity="0.4" fill="none" stroke-linecap="round"/>
+  
+  <!-- Base del bicchiere -->
+  <circle cx="100" cy="165" r="20" fill="#37474F"/>
+  <ellipse cx="100" cy="165" rx="20" ry="4" fill="#263238"/>
+  
+  <!-- Stelo -->
+  <rect x="97" y="120" width="6" height="45" fill="#455A64" rx="2"/>
+  
+  <!-- Oliva sul stecchino -->
+  <line x1="85" y1="55" x2="105" y2="75" stroke="#8D6E63" stroke-width="2"/>
+  <circle cx="85" cy="50" r="6" fill="#7CB342"/>
+  <circle cx="83" cy="49" r="2" fill="#558B2F"/>
+  
+  <!-- Fettina di limone sul bordo -->
+  <g transform="translate(125, 60)">
+    <circle cx="0" cy="0" r="12" fill="#FFF59D" stroke="#FBC02D" stroke-width="2"/>
+    <circle cx="0" cy="0" r="9" fill="#FFF9C4" opacity="0.7"/>
+    <line x1="-8" y1="0" x2="8" y2="0" stroke="#FBC02D" stroke-width="1"/>
+    <line x1="0" y1="-8" x2="0" y2="8" stroke="#FBC02D" stroke-width="1"/>
+    <line x1="-6" y1="-6" x2="6" y2="6" stroke="#FBC02D" stroke-width="1"/>
+    <line x1="-6" y1="6" x2="6" y2="-6" stroke="#FBC02D" stroke-width="1"/>
+  </g>
+  
+  <!-- Bollicine -->
+  <circle cx="95" cy="90" r="2.5" fill="#FFF" opacity="0.6"/>
+  <circle cx="105" cy="95" r="2" fill="#FFF" opacity="0.5"/>
+  <circle cx="98" cy="105" r="1.5" fill="#FFF" opacity="0.7"/>
+  
+  <!-- Icona menu in basso -->
+  <g transform="translate(100, 185)">
+    <circle cx="0" cy="0" r="8" fill="#66BB6A" opacity="0.3"/>
+    <text x="0" y="3" font-family="Arial" font-size="12" fill="#2E7D32" text-anchor="middle" font-weight="bold">≡</text>
+  </g>
+</svg>

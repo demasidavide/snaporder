@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAFAFA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F5F5F5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sfondo azzurro chiaro -->
+  <rect width="200" height="200" fill="#E3F2FD"/>
+  
+  <!-- Scontrino/Receipt -->
+  <g transform="translate(60, 25)">
+    <!-- Corpo dello scontrino -->
+    <rect x="0" y="0" width="80" height="140" fill="url(#paperGrad)" stroke="#BDBDBD" stroke-width="2" rx="4"/>
+    
+    <!-- Bordo superiore strappato -->
+    <path d="M 0 0 L 4 -3 L 8 0 L 12 -3 L 16 0 L 20 -3 L 24 0 L 28 -3 L 32 0 L 36 -3 L 40 0 L 44 -3 L 48 0 L 52 -3 L 56 0 L 60 -3 L 64 0 L 68 -3 L 72 0 L 76 -3 L 80 0" 
+          fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1.5"/>
+    
+    <!-- Header scontrino -->
+    <rect x="5" y="8" width="70" height="20" fill="#1976D2" rx="3"/>
+    <text x="40" y="21" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="bold">ORDINE #042</text>
+    
+    <!-- Icona caffè -->
+    <g transform="translate(12, 36)">
+      <rect x="0" y="8" width="12" height="10" fill="#795548" rx="2"/>
+      <ellipse cx="6" cy="8" rx="5" ry="2" fill="#5D4037"/>
+      <path d="M 4 3 Q 4 1 4 0" stroke="#8D6E63" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M 8 3 Q 8 1 8 0" stroke="#8D6E63" stroke-width="1" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Linee ordine 1 -->
+    <rect x="28" y="38" width="30" height="3" fill="#424242" rx="1.5"/>
+    <rect x="28" y="43" width="20" height="2" fill="#757575" rx="1"/>
+    <circle cx="68" cy="42" r="5" fill="#4CAF50"/>
+    <text x="68" y="44" font-family="Arial" font-size="7" fill="white" text-anchor="middle" font-weight="bold">✓</text>
+    
+    <!-- Icona croissant -->
+    <g transform="translate(10, 58)">
+      <path d="M 2 8 Q 0 6 2 4 Q 4 2 8 2 Q 12 2 14 4 Q 16 6 14 8 Q 12 10 8 10 Q 4 10 2 8" 
+            fill="#F4A460" stroke="#D2691E" stroke-width="1"/>
+      <ellipse cx="8" cy="6" rx="3" ry="2" fill="#DEB887" opacity="0.5"/>
+    </g>
+    
+    <!-- Linee ordine 2 -->
+    <rect x="28" y="60" width="32" height="3" fill="#424242" rx="1.5"/>
+    <rect x="28" y="65" width="24" height="2" fill="#757575" rx="1"/>
+    <circle cx="68" cy="64" r="5" fill="#4CAF50"/>
+    <text x="68" y="66" font-family="Arial" font-size="7" fill="white" text-anchor="middle" font-weight="bold">✓</text>
+    
+    <!-- Icona succo -->
+    <g transform="translate(10, 78)">
+      <rect x="2" y="4" width="10" height="12" fill="#FF9800" rx="1" stroke="#F57C00" stroke-width="1"/>
+      <ellipse cx="7" cy="4.5" rx="4" ry="1.5" fill="#FFB74D"/>
+      <rect x="5" y="0" width="4" height="5" fill="#F57C00" rx="1"/>
+      <circle cx="7" cy="10" r="1.5" fill="#FFF3E0" opacity="0.7"/>
+    </g>
+    
+    <!-- Linee ordine 3 -->
+    <rect x="28" y="82" width="28" height="3" fill="#424242" rx="1.5"/>
+    <rect x="28" y="87" width="18" height="2" fill="#757575" rx="1"/>
+    <circle cx="68" cy="86" r="5" fill="#FF9800"/>
+    <text x="68" y="88" font-family="Arial" font-size="7" fill="white" text-anchor="middle" font-weight="bold">⋯</text>
+    
+    <!-- Linea divisoria -->
+    <line x1="8" y1="102" x2="72" y2="102" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="2,2"/>
+    
+    <!-- Totale -->
+    <text x="10" y="115" font-family="Arial, sans-serif" font-size="9" fill="#424242" font-weight="bold">TOTALE:</text>
+    <text x="70" y="115" font-family="Arial, sans-serif" font-size="10" fill="#1976D2" font-weight="bold" text-anchor="end">€12.50</text>
+    
+    <!-- Timestamp -->
+    <text x="40" y="128" font-family="Arial, sans-serif" font-size="6" fill="#9E9E9E" text-anchor="middle">30/01/2026 - 09:42</text>
+    
+    <!-- Bordo inferiore strappato -->
+    <path d="M 0 140 L 4 143 L 8 140 L 12 143 L 16 140 L 20 143 L 24 140 L 28 143 L 32 140 L 36 143 L 40 140 L 44 143 L 48 140 L 52 143 L 56 140 L 60 143 L 64 140 L 68 143 L 72 140 L 76 143 L 80 140" 
+          fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Icona pin/clipboard decorativo -->
+  <circle cx="100" cy="20" r="8" fill="#FF5252"/>
+  <rect x="97" y="16" width="6" height="8" fill="#B71C1C" rx="1"/>
+  
+  <!-- Ombra sotto lo scontrino -->
+  <ellipse cx="100" cy="173" rx="35" ry="5" fill="#000" opacity="0.1"/>
+</svg>

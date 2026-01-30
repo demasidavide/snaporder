@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="walletGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8D6E63;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5D4037;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="moneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4CAF50;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sfondo -->
+  <rect width="200" height="200" fill="#FFF8E1"/>
+  
+  <!-- Portafoglio -->
+  <g transform="translate(40, 70)">
+    <!-- Corpo portafoglio -->
+    <rect x="0" y="0" width="120" height="80" fill="url(#walletGrad)" rx="8"/>
+    <rect x="3" y="3" width="114" height="74" fill="#795548" rx="6"/>
+    
+    <!-- Cuciture decorative -->
+    <line x1="8" y1="8" x2="8" y2="69" stroke="#A1887F" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+    <line x1="109" y1="8" x2="109" y2="69" stroke="#A1887F" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+    
+    <!-- Tasca -->
+    <rect x="10" y="50" width="100" height="25" fill="#6D4C41" rx="3"/>
+    <line x1="12" y1="50" x2="108" y2="50" stroke="#A1887F" stroke-width="1.5"/>
+    
+    <!-- Bottone/chiusura -->
+    <circle cx="60" cy="40" r="5" fill="#FFAB91" stroke="#D84315" stroke-width="1.5"/>
+    <circle cx="60" cy="40" r="2" fill="#BF360C"/>
+  </g>
+  
+  <!-- Banconote che escono -->
+  <g transform="translate(60, 50)">
+    <!-- Banconota 1 (dietro) -->
+    <rect x="0" y="0" width="60" height="35" fill="#66BB6A" rx="3" stroke="#2E7D32" stroke-width="2" transform="rotate(-8 30 17.5)"/>
+    <rect x="5" y="5" width="50" height="25" fill="#81C784" rx="2" transform="rotate(-8 30 17.5)"/>
+    <circle cx="30" cy="17.5" r="8" fill="#2E7D32" opacity="0.3" transform="rotate(-8 30 17.5)"/>
+    
+    <!-- Banconota 2 (centro) -->
+    <rect x="5" y="-5" width="60" height="35" fill="#4CAF50" rx="3" stroke="#1B5E20" stroke-width="2" transform="rotate(-3 35 12.5)"/>
+    <rect x="10" y="0" width="50" height="25" fill="#66BB6A" rx="2" transform="rotate(-3 35 12.5)"/>
+    <circle cx="35" cy="12.5" r="8" fill="#81C784" transform="rotate(-3 35 12.5)"/>
+    <circle cx="35" cy="12.5" r="5" fill="#1B5E20" opacity="0.2" transform="rotate(-3 35 12.5)"/>
+    
+    <!-- Banconota 3 (davanti) -->
+    <rect x="10" y="-10" width="60" height="35" fill="#2E7D32" rx="3" stroke="#1B5E20" stroke-width="2" transform="rotate(2 40 7.5)"/>
+    <rect x="15" y="-5" width="50" height="25" fill="#4CAF50" rx="2" transform="rotate(2 40 7.5)"/>
+    <circle cx="40" cy="7.5" r="7" fill="#66BB6A" opacity="0.6" transform="rotate(2 40 7.5)"/>
+  </g>
+  
+  <!-- Monete -->
+  <g transform="translate(135, 95)">
+    <!-- Moneta 1 -->
+    <circle cx="0" cy="0" r="12" fill="#FFD54F" stroke="#F57F17" stroke-width="2"/>
+    <circle cx="0" cy="0" r="9" fill="#FFEB3B"/>
+    <circle cx="0" cy="0" r="5" fill="#FBC02D" opacity="0.6"/>
+    
+    <!-- Moneta 2 -->
+    <circle cx="20" cy="8" r="11" fill="#FFCA28" stroke="#F57F17" stroke-width="2"/>
+    <circle cx="20" cy="8" r="8" fill="#FFD54F"/>
+    <circle cx="20" cy="8" r="4" fill="#F9A825" opacity="0.6"/>
+    
+    <!-- Moneta 3 -->
+    <circle cx="8" cy="20" r="9" fill="#FBC02D" stroke="#F57F17" stroke-width="1.5"/>
+    <circle cx="8" cy="20" r="7" fill="#FFCA28"/>
+    <circle cx="8" cy="20" r="3" fill="#F57F17" opacity="0.4"/>
+  </g>
+  
+  <!-- Badge totale semplificato senza testo -->
+  <g transform="translate(100, 165)">
+    <circle cx="0" cy="0" r="22" fill="#FF6F00"/>
+    <circle cx="0" cy="0" r="18" fill="#FF8F00"/>
+    <circle cx="0" cy="0" r="12" fill="#FFA726" opacity="0.5"/>
+  </g>
+  
+  <!-- Decorazione monete sparse in basso -->
+  <circle cx="25" cy="175" r="6" fill="#FFCA28" opacity="0.4"/>
+  <circle cx="175" cy="180" r="7" fill="#FFD54F" opacity="0.4"/>
+  <circle cx="160" cy="170" r="5" fill="#FBC02D" opacity="0.3"/>
+  
+  <!-- Ombra portafoglio -->
+  <ellipse cx="100" cy="152" rx="50" ry="5" fill="#000" opacity="0.2"/>
+</svg>
