@@ -136,10 +136,11 @@
 }
 
 .icon-chevron {
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   color: #2563eb;
   transition: transform 0.3s ease;
+  
 }
 
 .tavolo-card:hover .icon-chevron {
@@ -175,13 +176,14 @@
 .icon-trash {
   color: var(--warning);
   cursor: pointer;
-  margin: 3% 0%;
+  margin: 8% 15%;
   transition:
     color 0.2s ease,
     transform 0.2s ease;
 }
 .img-ordine {
   width: 50%;
+  margin-right: 8%;
 }
 .alert-delete {
   animation: fadeToOrange 1s ease-in-out forwards;

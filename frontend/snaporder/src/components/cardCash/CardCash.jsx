@@ -1,6 +1,8 @@
 import React from 'react';
 import { Users, MapPin, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import Cassa from "../../assets/cassa-3.svg";
+
 import './CardCash.css';
 
 const CardCash = ({ name,num,located,id, onClick }) => {
@@ -27,6 +29,7 @@ const CardCash = ({ name,num,located,id, onClick }) => {
             </div>
           </div>
         </div>
+                  <img src={Cassa} alt="Ordine" className="img-cassa" />
         
         {/* Freccia */}
         <div className="tavolo-freccia">
