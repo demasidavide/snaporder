@@ -25,7 +25,7 @@ function Home() {
 
   useEffect(() => {
     handleTable();
-  }, [selectArea,openModalAddTable]);
+  }, [selectArea,openModalAddTable,table]);
 
   //handle per aprire la modale di inserimento tavoli
   const handleOpenModal = () => {

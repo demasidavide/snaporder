@@ -1,20 +1,20 @@
 @import "../../variables/variables.css";
 
-.container-card-cash{
-    border-bottom: solid 1px var(--focus);
-    max-height: 70%;
-    overflow-y: auto;
-    margin-bottom: 20px;
+.container-card-cash {
+  border-bottom: solid 1px var(--focus);
+  max-height: 70%;
+  overflow-y: auto;
+  margin-bottom: 20px;
 }
-.container-checkbox{
-    margin-left: 15px;
+.container-checkbox {
+  margin-left: 15px;
 }
-.checkbox-cash{
-    color:var(--neutral)
+.checkbox-cash {
+  color: var(--neutral);
 }
 
 .checkbox-cash .MuiCheckbox-root.Mui-checked {
-    color: var(--confirm);
+  color: var(--confirm);
 }
 .text-parziale {
   margin-top: 50px;
@@ -39,8 +39,7 @@
 .text-payment {
   margin-top: 50px;
   width: 300px;
-    margin-left: 11% !important;
-
+  margin-left: 11% !important;
 }
 .text-payment label {
   color: var(--neutral); /* Colore del testo dell'etichetta */
@@ -59,6 +58,19 @@
   border-color: var(--neutral); /* Bordo al hover */
 }
 
-.text-payment .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.text-payment
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
   border-color: var(--neutral); /* Bordo quando focalizzato */
+}
+
+/* Stile per le righe già pagate */
+.row-paid {
+  background-color: rgba(76, 175, 80, 0.3) !important;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.row-paid:hover {
+  background-color: rgba(76, 175, 80, 0.4) !important;
 }

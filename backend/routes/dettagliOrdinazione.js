@@ -15,8 +15,9 @@ router.get("/food/:id", async (req, res) => {
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "cibo"
-      and id_ordinazione = ?`,
-      [id],
+      and id_ordinazione = ?
+      and dettagli_ordinazione.status = "pending"`,
+      [id]
     );
     res.status(200).json(rows);
   } catch (e) {
@@ -36,8 +37,9 @@ router.get("/drink/:id", async (req, res) => {
       FROM dettagli_ordinazione INNER JOIN  prodotti
       ON prodotti.id_prodotto = dettagli_ordinazione.id_prodotto
       WHERE tipo_prodotto = "bevanda"
-      and id_ordinazione = ?`,
-      [id],
+      and id_ordinazione = ?
+      and dettagli_ordinazione.status = "pending"`,
+      [id]
     );
     res.status(200).json(rows);
   } catch (e) {

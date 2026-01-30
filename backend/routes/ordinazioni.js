@@ -5,7 +5,7 @@ const router = express.Router();
 //GET per leggere numero dei tavoli/ordinazioni
 router.get("/tot", async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT COUNT(*) as total FROM ordinazioni");
+    const [rows] = await pool.query("SELECT COUNT(*) as total FROM ordinazioni WHERE stato = 'aperta'");
     res.status(200).json({ total: rows[0].total });
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });
@@ -14,7 +14,7 @@ router.get("/tot", async (req, res) => {
 //GET per prendere tutte le ordinazioni
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM ordinazioni");
+    const [rows] = await pool.query("SELECT * FROM ordinazioni WHERE stato = 'aperta'");
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json({ error: "Errore nel database" });

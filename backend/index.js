@@ -5,17 +5,13 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 
-//route per tavoli----------NON PIU IN USO-----------
-// const tavoliRouter = require('./routes/tavoli.js');
-// app.use('/tavoli',tavoliRouter);
-//route per ordinazioni
 const ordinazioniRouter = require('./routes/ordinazioni.js');
-app.use('/ordinazioni',ordinazioniRouter);
-//route per prodotti
 const prodottiRouter = require('./routes/prodotti.js');
-app.use('/prodotti',prodottiRouter);
-//route per dettagli ordinazione
 const dettagliRouter = require('./routes/dettagliOrdinazione.js');
+const scontriniRouter = require('./routes/scontrini.js');
+app.use('/ordinazioni',ordinazioniRouter);
+app.use('/prodotti',prodottiRouter);
 app.use('/dettagli',dettagliRouter);
+app.use('/scontrini',scontriniRouter);
 
 app.listen(3000, () => console.log("server partito su porta 3000"));
