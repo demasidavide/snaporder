@@ -1,12 +1,62 @@
 import { useNavigate } from "react-router";
 import { Users, MapPin, ChevronRight, Trash2 } from "lucide-react";
+import { useState } from "react";
 import Ordine from "../../assets/ordine-3.svg";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import axios from "axios";
 import "./CardTable.css";
 
 function CardTable({ name, num, located, id, onClick, onDelete }) {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = async(id)=>{
+    try{
+      const del = await axios.delete(`http://127.0.0.1:3000/ordinazioni/${id}`)
+      console.log("cancellazione riuscita")
+    }catch(error){
+      console.error("Impossibile cancellare", error);
+    }
+  }
+
   return (
     <>
+    {/* alert per cancellazione */}
+    <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        className="alert-delete"
+      >
+        <DialogTitle sx={{color:"red"}} id="alert-dialog-title">
+          {"Attenzione"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Cancellare l'ordine e tutti gli elementi <br></br>all'interno?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{color:"grey"}} onClick={handleClose}>indietro</Button>
+          <Button sx={{color:"red"}} onClick={()=>handleDelete(id)} autoFocus>
+            Cancella
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className="tavolo-card" onClick={onClick}>
         <div className="tavolo-card-content">
           <div className="tavolo-info">
@@ -28,10 +78,7 @@ function CardTable({ name, num, located, id, onClick, onDelete }) {
               </div>
 
               <Trash2
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete && onDelete(id);
-                }}
+                onClick={handleClickOpen}
                 className="icon-trash"
               />
             </div>
