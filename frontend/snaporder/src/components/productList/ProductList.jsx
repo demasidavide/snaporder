@@ -23,6 +23,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import ModeIcon from "@mui/icons-material/Mode";
 import ModalDelete from "../modalDelete/ModalDelete";
+import AlertConfirm from "../alertConfirm/AlertConfirm";
 import Slide from "@mui/material/Slide";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -47,11 +48,18 @@ function ProductList() {
   });
   const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
   const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
+  const [alertConfirm, setAlertConfirm] = useState({open:false, message:""});//stato per alert conferma
 
   useEffect(() => {
     handleShowProduct();
   }, [selectedType, openModal]);
 
+//gestione per apertura alert di  conferma prodotto inserito--
+const handleAlertConfirm = (message)=>{
+   setAlertConfirm({open:true, message: message});
+  setTimeout(() => setAlertConfirm({open:false, message:""}), 2000);
+}
+//-----------------------------------------------------------
   //gestione apertura alert cancellazione---------------
   const handleOpenAlert = (id, nome) => {
     setIdToDelMod(id);
@@ -140,6 +148,7 @@ function ProductList() {
         prezzo_unitario: priceProd,
         tipo_prodotto: typeProd,
       });
+      handleAlertConfirm("Prodotto inserito");
       handleCloseModal();
     } catch (error) {
       console.log(error);
@@ -153,6 +162,7 @@ function ProductList() {
         `http://127.0.0.1:3000/prodotti/${idToDelMod}`,
       );
       console.log(del.status);
+      handleAlertConfirm("Prodotto cancellato")
       handleCloseAlert();
       handleShowProduct();
     } catch (error) {
@@ -174,6 +184,7 @@ function ProductList() {
         });
         console.log(mod.status,`modifica effettuata con id ${idToDelMod}`)
         handleShowProduct();
+        handleAlertConfirm("Prodotto modificato");
         handleCloseModalMod();
     } catch (error) {
       console.error("Modifica non riuscita", error);
@@ -182,6 +193,12 @@ function ProductList() {
 
   return (
     <>
+    <AlertConfirm
+    open = {alertConfirm.open}
+    onClose={()=>setAlertConfirm({open:false, message:""})}
+    message={alertConfirm.message}
+    >
+    </AlertConfirm>
       {/* inizio modale cancellazione */}
       <ModalDelete
       open={openAlert}
