@@ -98,7 +98,9 @@ function Pay() {
                 { field: "quantita", headerName: "Quantità", width: 100 },
                 { field: "prezzo", headerName: "Prezzo", width: 100 },
               ]}
-              pageSizeOptions={[5, 10]}
+              hideFooter={true}
+              paginationModel={{ pageSize: 100, page: 0 }}
+              pageSizeOptions={[100]}
               checkboxSelection
               isRowSelectable={(params) => !paidRows.has(params.row.id)}
               onRowSelectionModelChange={(selectionModel) => {
