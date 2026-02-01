@@ -16,7 +16,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
@@ -24,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ModeIcon from "@mui/icons-material/Mode";
 import ModalDelete from "../modalDelete/ModalDelete";
 import AlertConfirm from "../alertConfirm/AlertConfirm";
-import Slide from "@mui/material/Slide";
+import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -48,18 +47,13 @@ function ProductList() {
   });
   const [idToDelMod, setIdToDelMod] = useState(); //id da cancellare o modificare
   const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
-  const [alertConfirm, setAlertConfirm] = useState({open:false, message:""});//stato per alert conferma
+  const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
+    useAlertConfirm();
 
   useEffect(() => {
     handleShowProduct();
   }, [selectedType, openModal]);
 
-//gestione per apertura alert di  conferma prodotto inserito--
-const handleAlertConfirm = (message)=>{
-   setAlertConfirm({open:true, message: message});
-  setTimeout(() => setAlertConfirm({open:false, message:""}), 2000);
-}
-//-----------------------------------------------------------
   //gestione apertura alert cancellazione---------------
   const handleOpenAlert = (id, nome) => {
     setIdToDelMod(id);
@@ -269,7 +263,7 @@ const handleAlertConfirm = (message)=>{
         <DialogActions>
           <Button onClick={() => handleCloseModalMod()}>Indietro</Button>
           <Button type="submit" form="subscription-form">
-            Aggiungi
+            Modifica
           </Button>
         </DialogActions>
       </Dialog>

@@ -2,10 +2,8 @@ import "./Order.css";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Fab from "@mui/material/Fab";
 import Button from "@mui/material/Button";
@@ -15,20 +13,16 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import EuroIcon from "@mui/icons-material/Euro";
 import CloseIcon from "@mui/icons-material/Close";
 import ModalDetails from "../../components/modalDetails/ModalDetails";
-import ModalOrder from "../../components/modalOrder/ModalOrder";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import ModalDelete from "../../components/modalDelete/ModalDelete";
 import ModeIcon from "@mui/icons-material/Mode";
 import axios from "axios";
+import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
+import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
@@ -36,7 +30,7 @@ function Order() {
   const navigate = useNavigate();
   const location = useLocation();
   const idOrdine = location.state?.id;
-  console.log(idOrdine)
+  console.log(idOrdine);
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
   const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
   const [selectedType, setSelectedType] = useState("Cibo");
@@ -54,6 +48,8 @@ function Order() {
     const saved = localStorage.getItem("selectedRows");
     return saved ? JSON.parse(saved) : [];
   });
+  const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
+    useAlertConfirm();
 
   useEffect(() => {
     handleDetails();
@@ -124,10 +120,14 @@ function Order() {
   const handleDetails = async () => {
     try {
       if (selectedType === "Bevande") {
-        const res = await axios.get(`http://127.0.0.1:3000/dettagli/drink/${idOrdine}`);
+        const res = await axios.get(
+          `http://127.0.0.1:3000/dettagli/drink/${idOrdine}`,
+        );
         setDetails(res.data);
       } else {
-        const res = await axios.get(`http://127.0.0.1:3000/dettagli/food/${idOrdine}`);
+        const res = await axios.get(
+          `http://127.0.0.1:3000/dettagli/food/${idOrdine}`,
+        );
         setDetails(res.data);
         console.log(res.data);
       }
@@ -142,6 +142,7 @@ function Order() {
       const del = await axios.delete(`http://127.0.0.1:3000/dettagli/${id}`);
       console.log("cancellazione ok di", id);
       handleDetails();
+      handleAlertConfirm("Ordinazione Cancellata");
       handleCloseAlert();
     } catch (error) {
       console.error("Impossibile cancellare f", error);
@@ -149,26 +150,35 @@ function Order() {
   };
   //------------------------------------------------------------------
   //handle per modificare i dati dettagli-----------------------------
-  const handleModDetails = async(e)=>{
+  const handleModDetails = async (e) => {
     e.preventDefault();
-    console.log(idToDelMod)
-    try{
-      const mod = await axios.put(`http://127.0.0.1:3000/dettagli/${idToDelMod}`,{
-        note: modData.note || "",
-        quantita: modData.quantita
-      })
+    console.log(idToDelMod);
+    try {
+      const mod = await axios.put(
+        `http://127.0.0.1:3000/dettagli/${idToDelMod}`,
+        {
+          note: modData.note || "",
+          quantita: modData.quantita,
+        },
+      );
       console.log("Modifica avvenuta correttamente per id", idToDelMod);
       handleDetails();
-      handleCloseModalMod();
+      handleAlertConfirm("Ordinazione modificata");
 
-    }catch (error) {
+      handleCloseModalMod();
+    } catch (error) {
       console.error("Impossibile modificare f", error);
     }
-  }
+  };
   //------------------------------------------------------------------
 
   return (
     <>
+      <AlertConfirm
+        open={alertConfirm.open}
+        onClose={() => setAlertConfirm({ open: false, message: "" })}
+        message={alertConfirm.message}
+      ></AlertConfirm>
       {/* modale di cancellazione */}
       <ModalDelete
         open={openAlert}
@@ -210,8 +220,10 @@ function Order() {
               className="input-number"
               min={1}
               max={20}
-              value={modData.quantita}  
-              onChange={(e) => setModData({ ...modData, quantita: e.target.value })}
+              value={modData.quantita}
+              onChange={(e) =>
+                setModData({ ...modData, quantita: e.target.value })
+              }
             ></input>
           </form>
         </DialogContent>
@@ -286,7 +298,14 @@ function Order() {
                 <TableCell align="right">
                   <ModeIcon
                     className="mod"
-                    onClick={() => handleOpenModalMod(d.id_dettaglio,d.nome_prodotti,d.note,d.quantita,)}
+                    onClick={() =>
+                      handleOpenModalMod(
+                        d.id_dettaglio,
+                        d.nome_prodotti,
+                        d.note,
+                        d.quantita,
+                      )
+                    }
                   ></ModeIcon>
                   <DeleteIcon
                     className="delete"
@@ -314,8 +333,9 @@ function Order() {
         >
           <AddIcon />
         </Fab>
-        <Fab variant="extended"
-        onClick={()=>navigate('/pay', {state:{ id : idOrdine }})}
+        <Fab
+          variant="extended"
+          onClick={() => navigate("/pay", { state: { id: idOrdine } })}
         >
           <EuroIcon sx={{ mr: 1 }} />
           Paga
