@@ -67,6 +67,27 @@ function ModalDetails({ open, onClose, idOrdine }) {
     }
   };
   //--------------------------------------------------------------------
+  //submmit personalizzato con inserimento prodotto---------------------
+  const handleSubmitPers = async (e) => {
+    e.preventDefault();
+    try {
+      const ins = await axios.post("http://127.0.0.1:3000/dettagli/crea", {
+        // tipo_prodotto,
+        id_ordinazione: idOrdine,
+        nome: name,
+        quantita: parseInt(qta),
+        prezzo_unitario: priceProd,
+        subtotale: parseInt(qta) * priceProd,
+        note: note,
+        tipo_prodotto: typeProd
+      });
+      console.log("Dettaglio inserito", ins.data);
+      onClose();
+    } catch (error) {
+      console.error("Errore inserimento dettaglio", error);
+    }
+  };
+  //--------------------------------------------------------------------
   useEffect(() => {
     handleShowProduct();
   }, [open, type]);
@@ -77,7 +98,7 @@ function ModalDetails({ open, onClose, idOrdine }) {
         <DialogTitle>Aggiungi </DialogTitle>
 
         <DialogContent>
-          <form id="subscription-form" onSubmit={handleSubmit}>
+          <form id="subscription-form" onSubmit={type === "pers" ? handleSubmitPers : handleSubmit}>
             <InputLabel id="demo-simple-select-label">
               Cibo/Bevanda/Personalizzato
             </InputLabel>
@@ -126,7 +147,7 @@ function ModalDetails({ open, onClose, idOrdine }) {
                   type="text"
                   fullWidth
                   variant="standard"
-                  value={""}
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 <TextField

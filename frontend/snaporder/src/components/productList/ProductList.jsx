@@ -22,6 +22,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import ModeIcon from "@mui/icons-material/Mode";
 import ModalDelete from "../modalDelete/ModalDelete";
+import AlertError from "../alertError/AlertError";
+import { useAlertError } from "../../hooks/useAlertError";
 import AlertConfirm from "../alertConfirm/AlertConfirm";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import axios from "axios";
@@ -49,6 +51,7 @@ function ProductList() {
   const [prodSelected, setProdSelected] = useState([]); //dati di un singolo prodotto
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
+  const { alertError, setAlertError, handleAlertError } = useAlertError();
 
   useEffect(() => {
     handleShowProduct();
@@ -145,6 +148,8 @@ function ProductList() {
       handleAlertConfirm("Prodotto inserito");
       handleCloseModal();
     } catch (error) {
+      handleCloseModal();
+      handleAlertError("Errore- Attendi e riprova");
       console.log(error);
     }
   };
@@ -156,10 +161,12 @@ function ProductList() {
         `http://127.0.0.1:3000/prodotti/${idToDelMod}`,
       );
       console.log(del.status);
-      handleAlertConfirm("Prodotto cancellato")
+      handleAlertConfirm("Prodotto cancellato");
       handleCloseAlert();
       handleShowProduct();
     } catch (error) {
+      handleCloseAlert();
+      handleAlertError("Errore- Attendi e riprova");
       console.error("Errore nella cancellazione", error);
     }
   };
@@ -175,30 +182,37 @@ function ProductList() {
           descrizione: modData.descrizione,
           prezzo_unitario: modData.prezzo,
           tipo_prodotto: modData.tipo,
-        });
-        console.log(mod.status,`modifica effettuata con id ${idToDelMod}`)
-        handleShowProduct();
-        handleAlertConfirm("Prodotto modificato");
-        handleCloseModalMod();
+        },
+      );
+      console.log(mod.status, `modifica effettuata con id ${idToDelMod}`);
+      handleShowProduct();
+      handleAlertConfirm("Prodotto modificato");
+      handleCloseModalMod();
     } catch (error) {
+      handleCloseModalMod();
+      handleAlertError("Errore- Attendi e riprova");
       console.error("Modifica non riuscita", error);
     }
   };
 
   return (
     <>
-    <AlertConfirm
-    open = {alertConfirm.open}
-    onClose={()=>setAlertConfirm({open:false, message:""})}
-    message={alertConfirm.message}
-    >
-    </AlertConfirm>
+      <AlertError
+        open={alertError.open}
+        onClose={() => setAlertError({ open: false, message: "" })}
+        message={alertError.message}
+      ></AlertError>
+      <AlertConfirm
+        open={alertConfirm.open}
+        onClose={() => setAlertConfirm({ open: false, message: "" })}
+        message={alertConfirm.message}
+      ></AlertConfirm>
       {/* inizio modale cancellazione */}
       <ModalDelete
-      open={openAlert}
-      onClose={handleCloseAlert}
-      name={prodSelected.map((p) => p.nome)}
-      onDelete={handleDelete}
+        open={openAlert}
+        onClose={handleCloseAlert}
+        name={prodSelected.map((p) => p.nome)}
+        onDelete={handleDelete}
       ></ModalDelete>
       {/* Fine modale cancellazione */}
       {/* Inizio modale modifica */}
@@ -217,7 +231,7 @@ function ProductList() {
               fullWidth
               variant="standard"
               value={modData.nome}
-              onChange={(e) => setModData({...modData, nome: e.target.value})}
+              onChange={(e) => setModData({ ...modData, nome: e.target.value })}
             />
             <TextField
               autoFocus
@@ -229,7 +243,9 @@ function ProductList() {
               fullWidth
               variant="standard"
               value={modData.descrizione}
-              onChange={(e) => setModData({...modData, descrizione: e.target.value})}
+              onChange={(e) =>
+                setModData({ ...modData, descrizione: e.target.value })
+              }
             />
             <TextField
               autoFocus
@@ -242,7 +258,9 @@ function ProductList() {
               fullWidth
               variant="standard"
               value={modData.prezzo}
-              onChange={(e) => setModData({...modData, prezzo: e.target.value})}
+              onChange={(e) =>
+                setModData({ ...modData, prezzo: e.target.value })
+              }
             />
             <InputLabel id="demo-simple-select-label">
               Cibo / Bevanda
@@ -253,7 +271,7 @@ function ProductList() {
               label="Seleziona tipo"
               sx={{ minWidth: 250 }}
               value={modData.tipo}
-              onChange={(e) => setModData({...modData, tipo: e.target.value})}
+              onChange={(e) => setModData({ ...modData, tipo: e.target.value })}
             >
               <MenuItem value="cibo">Cibo</MenuItem>
               <MenuItem value="bevanda">Bevanda</MenuItem>
@@ -382,7 +400,7 @@ function ProductList() {
                   <TableCell>€ {f.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon
-                    className="mod"
+                      className="mod"
                       onClick={() =>
                         handleOpenModalMod(
                           f.id_prodotto,
@@ -407,7 +425,7 @@ function ProductList() {
                   <TableCell>€ {d.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon
-                    onClick={() =>
+                      onClick={() =>
                         handleOpenModalMod(
                           d.id_prodotto,
                           d.nome,
@@ -415,7 +433,8 @@ function ProductList() {
                           d.prezzo_unitario,
                           d.tipo_prodotto,
                         )
-                      }></ModeIcon>
+                      }
+                    ></ModeIcon>
                     <DeleteIcon
                       onClick={() => handleOpenAlert(d.id_prodotto, d.nome)}
                       className="delete"
@@ -430,7 +449,7 @@ function ProductList() {
                   <TableCell>€ {a.prezzo_unitario}</TableCell>
                   <TableCell>
                     <ModeIcon
-                    onClick={() =>
+                      onClick={() =>
                         handleOpenModalMod(
                           a.id_prodotto,
                           a.nome,
@@ -438,7 +457,8 @@ function ProductList() {
                           a.prezzo_unitario,
                           a.tipo_prodotto,
                         )
-                      }></ModeIcon>
+                      }
+                    ></ModeIcon>
                     <DeleteIcon
                       onClick={() => handleOpenAlert(a.id_prodotto, a.nome)}
                       className="delete"

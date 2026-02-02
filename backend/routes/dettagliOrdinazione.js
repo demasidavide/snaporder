@@ -72,6 +72,47 @@ router.get("/pay/:id", async (req, res) => {
     res.status(500).json({ error: "Errore nel database" });
   }
 });
+//POST con transazione per inserimento prodotto personalizzato-
+//1.creazione prodotto-2.inserimento dettaglio
+router.post("/crea", async (req, res) => {
+const {nome, prezzo_unitario, tipo_prodotto,quantita,note, id_ordinazione, subtotale } = req.body;
+const connection = await pool.getConnection();
+try{
+  if(!nome || prezzo_unitario <= 0 || !tipo_prodotto || quantita <= 0){
+    connection.release();
+    return res.status(400).json({ error: "Dati non validi" });
+  }
+
+// Inizio transazione
+    await connection.beginTransaction();
+    // 1. Inserisce il prodotto e ottiene l'ID generato
+    const [result] = await connection.query(
+      `INSERT INTO prodotti (nome, prezzo_unitario, tipo_prodotto) 
+       VALUES (?, ?, ?)`,
+      [nome, prezzo_unitario, tipo_prodotto]
+    );
+    const prodottoId = result.insertId; 
+
+    // 2. Aggiungi prodotto a dettagli ordinazione
+    await connection.query(
+      `INSERT INTO dettagli_ordinazione (id_ordinazione, id_prodotto, quantita, prezzo_unitario, note, subtotale) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [id_ordinazione, prodottoId, quantita, prezzo_unitario, note, subtotale]
+    );
+// Commit della transazione
+    await connection.commit();
+res.status(201).json({
+      message: `Scontrino inserito e ordinazione aggiornata con successo`,
+      });
+}catch (e) {
+    // Rollback in caso di errore
+    await connection.rollback();
+    console.error("Errore transazione:", e);
+    res.status(500).json({ error: "Errore nel Database" });
+  } finally {
+    connection.release();
+  }
+});
 
 //POST inserimento dettaglio
 router.post("/", async (req, res) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 const pool = require("../connDb");
 const router = express.Router();
-
+   
 //post con transazione- inserisce scontrino-set dettagli_ordinazione.status = "paid"-set ordinazione.stato="chiuso"
 router.post("/", async (req, res) => {
   const { id_ordinazione, totale_pagato, id_utente_cassiere } = req.body;

@@ -8,7 +8,7 @@ export function useAlertError() {
 
   const handleAlertError = (message) => {
     setAlertError({ open: true, message: message });
-    setTimeout(() => setAlertError({ open: false, message: "" }), 2000);
+    setTimeout(() => setAlertError({ open: false, message: "" }), 3000);
   };
 
   return { alertError,setAlertError,handleAlertError };

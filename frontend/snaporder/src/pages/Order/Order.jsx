@@ -21,6 +21,8 @@ import TextField from "@mui/material/TextField";
 import ModalDelete from "../../components/modalDelete/ModalDelete";
 import ModeIcon from "@mui/icons-material/Mode";
 import axios from "axios";
+import AlertError from "../../components/alertError/AlertError";
+import { useAlertError } from "../../hooks/useAlertError";
 import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import { useLocation, useNavigate } from "react-router";
@@ -50,6 +52,7 @@ function Order() {
   });
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
+  const { alertError, setAlertError, handleAlertError } = useAlertError();
 
   useEffect(() => {
     handleDetails();
@@ -129,9 +132,9 @@ function Order() {
           `http://127.0.0.1:3000/dettagli/food/${idOrdine}`,
         );
         setDetails(res.data);
-        console.log(res.data);
       }
     } catch (error) {
+      handleAlertError("Errore- Attendi e riprova");
       console.error("impossibile recuperare dettagli", error);
     }
   };
@@ -145,6 +148,8 @@ function Order() {
       handleAlertConfirm("Ordinazione Cancellata");
       handleCloseAlert();
     } catch (error) {
+      handleCloseAlert();
+      handleAlertError("Errore- Attendi e riprova");
       console.error("Impossibile cancellare f", error);
     }
   };
@@ -164,9 +169,10 @@ function Order() {
       console.log("Modifica avvenuta correttamente per id", idToDelMod);
       handleDetails();
       handleAlertConfirm("Ordinazione modificata");
-
       handleCloseModalMod();
     } catch (error) {
+      handleCloseModalMod();
+      handleAlertError("Errore- Attendi e riprova");
       console.error("Impossibile modificare f", error);
     }
   };
@@ -174,6 +180,11 @@ function Order() {
 
   return (
     <>
+      <AlertError
+        open={alertError.open}
+        onClose={() => setAlertError({ open: false, message: "" })}
+        message={alertError.message}
+      ></AlertError>
       <AlertConfirm
         open={alertConfirm.open}
         onClose={() => setAlertConfirm({ open: false, message: "" })}

@@ -2,14 +2,13 @@ import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import "./AlertConfirm.css";
 import * as React from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertConfirm({ open, onClose, message }) {
+export default function AlertError({ open, onClose, message }) {
 
   return (
     <Dialog
@@ -23,7 +22,7 @@ export default function AlertConfirm({ open, onClose, message }) {
       aria-describedby="alert-dialog-slide-description"
     >
       <Stack sx={{ width: "100%" }} spacing={2}>
-        <Alert variant="filled" severity="success">
+        <Alert variant="filled" severity="error">
           {message}
         </Alert>
       </Stack>
