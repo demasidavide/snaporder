@@ -11,7 +11,7 @@ router.use(authMiddleware, roleMiddleware('admin'));
 router.get('/pending-users', async (req, res) => {
   try {
     const [users] = await pool.query(
-      'SELECT id_utente, username, email, ruolo, data_registrazione FROM utenti WHERE ruolo = ? ORDER BY created_at DESC',
+      'SELECT id_utente, username, email, ruolo, data_registrazione FROM utenti WHERE ruolo = ? ORDER BY data_registrazione DESC',
       ['pending']
     );
 

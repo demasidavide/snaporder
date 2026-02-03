@@ -24,7 +24,9 @@ const generateToken = (user) => {
 router.post('/register', [
   body('username').trim().isLength({ min: 3 }).withMessage('Username deve essere almeno 3 caratteri'),
   body('email').isEmail().withMessage('Email non valida'),
-  body('password').isLength({ min: 6 }).withMessage('Password deve essere almeno 6 caratteri')
+  body('password_hash').isLength({ min: 6 }).withMessage('Password deve essere almeno 6 caratteri'),
+  body('nome').trim().isLength({ min: 1 }).withMessage('Nome deve contenere almeno un carattere'),
+  body('cognome').trim().isLength({ min: 1 }).withMessage('Cognomeome deve contenere almeno un carattere')
 ], async (req, res) => {
   try {
     // Valida input
@@ -36,7 +38,7 @@ router.post('/register', [
       });
     }
 
-    const { username, email, password } = req.body;
+    const { username, email, password_hash, nome, cognome} = req.body;
 
     // Controlla se username o email esistono già
     const [existingUsers] = await pool.query(
@@ -57,8 +59,8 @@ router.post('/register', [
 
     // Inserisci nuovo utente con ruolo 'pending'
     const [result] = await pool.query(
-      'INSERT INTO utenti (username, email, password_hash, ruolo) VALUES (?, ?, ?, ?)',
-      [username, email, hashedPassword, 'pending']
+      'INSERT INTO utenti (username, email, password_hash, nome, cognome, ruolo) VALUES (?, ?, ?, ?)',
+      [username, email, hashedPassword, nome, cognome, 'pending']
     );
 
     // TODO: Invia email di notifica all'admin
@@ -86,7 +88,7 @@ router.post('/register', [
 // POST /api/auth/login
 router.post('/login', [
   body('username').notEmpty().withMessage('Username richiesto'),
-  body('password').notEmpty().withMessage('Password richiesta')
+  body('password_hash').notEmpty().withMessage('Password richiesta')
 ], async (req, res) => {
   try {
     // Valida input
@@ -98,7 +100,7 @@ router.post('/login', [
       });
     }
 
-    const { username, password } = req.body;
+    const { username, password_hash } = req.body;
 
     // Cerca utente nel database
     const [users] = await pool.query(
@@ -116,7 +118,7 @@ router.post('/login', [
     const user = users[0];
 
     // Verifica password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password_hash, user.password_hash);
 
     if (!isPasswordValid) {
       return res.status(401).json({ 
@@ -161,7 +163,7 @@ router.post('/login', [
 router.get('/me', authMiddleware, async (req, res) => {
   try {
     const [users] = await pool.query(
-      'SELECT id, username, email, ruolo, created_at FROM utenti WHERE id = ?',
+      'SELECT id_utente, username, email, ruolo, data_registrazione FROM utenti WHERE id_utente = ?',
       [req.user.id]
     );
 
