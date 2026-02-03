@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const { authMiddleware } = require('../middleware/auth');
+const { sendNewUserNotification } = require('../config/email');
 
 // Funzione helper per generare JWT
 const generateToken = (user) => {
@@ -33,18 +34,26 @@ router.post('/register', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ 
-        success: false, 
+        success: false,
+        message: 'Dati inseriti non validi', 
         errors: errors.array() 
       });
     }
 
     const { username, email, password_hash, nome, cognome} = req.body;
-
+    const user = {
+      nome : nome,
+      cognome : cognome,
+      username : username,
+      email : email
+    }
+console.log("Valori inviati:", { username, email });
     // Controlla se username o email esistono già
     const [existingUsers] = await pool.query(
       'SELECT id_utente FROM utenti WHERE username = ? OR email = ?',
       [username, email]
     );
+    console.log("Risultato query:", existingUsers);
 
     if (existingUsers.length > 0) {
       return res.status(400).json({ 
@@ -55,15 +64,19 @@ router.post('/register', [
 
     // Hash password
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password_hash, saltRounds);
 
     // Inserisci nuovo utente con ruolo 'pending'
     const [result] = await pool.query(
-      'INSERT INTO utenti (username, email, password_hash, nome, cognome, ruolo) VALUES (?, ?, ?, ?)',
+      'INSERT INTO utenti (username, email, password_hash, nome, cognome, ruolo) VALUES (?, ?, ?, ?, ?, ?)',
       [username, email, hashedPassword, nome, cognome, 'pending']
     );
 
     // TODO: Invia email di notifica all'admin
+    const send = await sendNewUserNotification(user);
+    if (!send.success) {
+      return res.status(500).json({ success: false, message: 'Errore durante l\'invio dell\'email', error: send.error });
+    }
 
     res.status(201).json({
       success: true,
