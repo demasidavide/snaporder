@@ -22,7 +22,7 @@ function ModalDetails({ open, onClose, idOrdine }) {
   const [typeProd, setTypeProd] = useState("cibo");
   const [note, setNote] = useState("");
 
-  //Lettura prodotti -cibi-bevande-tutti------------------
+  //Lettura prodotti -cibi-bevande-tutti--------------------------------------
   const handleShowProduct = async () => {
     try {
       if (type === "cibo") {
