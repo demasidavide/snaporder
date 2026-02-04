@@ -18,7 +18,35 @@ function Home() {
   ); //stato passato da navbar
   const [openModalAddTable, setOpenModalAddTable] = useState(false);
   const [table, setTable] = useState([]);
+  // const { detailsDelay,setDetailsDelay,checkDetails } = useDelayDetails();
+//funzione di caricamento dettagli in ritardo----------
+// useEffect(() => {
+//     let intervalId;
+//     if (table.length > 0) {
+//       checkDetails(); 
+//       intervalId = setInterval(checkDetails, 60000); 
+//     }
+//     const currentTime = new Date();
 
+//         const updatedOrders = detailsDelay.map((order) => {
+//           const orderTime = new Date(order.timestamp); 
+//           const diffInMinutes = (currentTime - orderTime) / (1000 * 60); 
+//           return {
+//             ...order,
+//             isOld: diffInMinutes > 5,
+//           };
+//         });
+//         setDetailsDelay(updatedOrders);
+      
+    
+    // Pulizia dell'intervallo
+  //   return () => {
+  //     if (intervalId) {
+  //       clearInterval(intervalId);
+  //     }
+  //   };
+  // }, [table]); // Dipendenza su table
+//-----------------------------------------------------
   useEffect(() => {
     handleTable();
   }, [selectArea, openModalAddTable, table]);
@@ -78,6 +106,7 @@ function Home() {
                     num={t.numero_persone}
                     located={t.posizione}
                     id={t.id_ordinazione}
+                    
                   ></CardTable>
                 ))}
               </>

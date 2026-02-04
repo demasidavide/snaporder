@@ -2,6 +2,19 @@ const express = require("express");
 const pool = require("../connDb");
 const router = express.Router();
 
+//GET per ordini in ritardo( recupero solo i campi necessari )
+router.get ("/delay",async (req,res)=>{
+try{
+  const [rows] = await pool.query(`
+    SELECT id_dettaglio,id_ordinazione,ordinato_il 
+    FROM dettagli_ordinazione; 
+    `)
+    res.status(200).json(rows);
+}catch (e) {
+    res.status(500).json({ error: "Errore nel database" });
+  }
+});
+
 //GET con join prodotti per tabella principale CIBO
 router.get("/food/:id", async (req, res) => {
   const { id } = req.params;
