@@ -14,9 +14,25 @@ function Pay() {
   const idOrdine = location.state?.id;
   console.log(idOrdine);
   const [details, setDetails] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [paidRows, setPaidRows] = useState(new Set());
+  const [paidRows, setPaidRows] = useState(() => {
+    const savedPaidRows = localStorage.getItem("paidRows");
+    return savedPaidRows ? new Set(JSON.parse(savedPaidRows)) : new Set();
+  });
   const [paid, setPaid] = useState(0);
+  const [selectedRows, setSelectedRows] = useState([]);
+  // Recupera paidRows da localStorage al caricamento del componente
+  useEffect(() => {
+    const savedPaidRows = localStorage.getItem("paidRows");
+    if (savedPaidRows) {
+      setPaidRows(new Set(JSON.parse(savedPaidRows)));
+    }
+  }, []);
+
+  // Salva paidRows in localStorage ogni volta che cambia
+  useEffect(() => {
+    localStorage.setItem("paidRows", JSON.stringify(Array.from(paidRows)));
+  }, [paidRows]);
+
   const totale = details
     .reduce((sum, d) => sum + parseFloat(d.subtotale || 0), 0)
     .toFixed(2);
@@ -24,7 +40,14 @@ function Pay() {
   const totaleSelezionato = selectedRows
     .reduce((sum, row) => sum + parseFloat(row.prezzo || 0), 0)
     .toFixed(2);
-  console.log(totale, totaleSelezionato);
+ 
+//useeffect per salvataggio righe selezionate
+useEffect(() => {
+    
+  }, []);
+
+
+
   useEffect(() => {
     handleDetails();
   }, []);
