@@ -26,7 +26,11 @@ function Login() {
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
   const [email, setEmail] = useState("");
-  const [insStatus, setInsStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState({
+    value: false,
+    message: "",
+  });
+ 
 
   const navigate = useNavigate();
 
@@ -44,9 +48,14 @@ function Login() {
   const handleCloseText = () => {
     setOpenText(false);
   };
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
+    setErrorMessage({value:false,message:""})
     console.log(username, email, password, nome, cognome);
+    setLoading(true);
+    await delay(3000);
+    setLoading(false);
     try {
       const ins = await axios.post("http://127.0.0.1:3000/auth/register", {
         username: username,
@@ -56,19 +65,17 @@ function Login() {
         cognome: cognome,
       });
       console.log(ins.status);
-      setInsStatus(ins.status);
     } catch (error) {
-      console.error("registrazione non effettuata-f-", error);
-      if (error.response) {
-    // Il server ha risposto con uno stato diverso da 2xx
-    console.error("Errore risposta server:", error.response.status, error.response.data);
-  } else if (error.request) {
-    // Nessuna risposta ricevuta dal server
-    console.error("Nessuna risposta dal server:", error.request);
-  } else {
-    // Errore nella configurazione della richiesta
-    console.error("Errore durante la configurazione della richiesta:", error.message);
-  }
+      if (error.response && error.response.status === 400) {
+        setErrorMessage({value:true, message:error.response.data.errors});
+        if (error.response) {
+          console.error(
+            "Errore risposta server:",
+            error.response.status,
+            error.response.data,
+          );
+        }
+      }
     }
   };
 
@@ -159,13 +166,11 @@ function Login() {
                 fullWidth
                 variant="standard"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
-              {insStatus === 400 && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">Email gia presente</Alert>
-                </Stack>
-              )}
+              
               <TextField
                 autoFocus
                 required
@@ -177,13 +182,11 @@ function Login() {
                 fullWidth
                 variant="standard"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
-              {insStatus === 400 && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">Username gia presente</Alert>
-                </Stack>
-              )}
+              
               <TextField
                 autoFocus
                 required
@@ -197,26 +200,26 @@ function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            <DialogActions>
-              <Button sx={{ color: "grey" }} onClick={handleClose}>
-                INDIETRO
-              </Button>
-              <Button sx={{ color: "green" }} type="submit">
-                REGISTRATI
-              </Button>
-            </DialogActions>
+              <DialogActions>
+                <Button sx={{ color: "grey" }} onClick={handleClose}>
+                  INDIETRO
+                </Button>
+                <Button sx={{ color: "green" }} type="submit">
+                  REGISTRATI
+                </Button>
+              </DialogActions>
             </form>
+            {errorMessage.value && 
+              errorMessage.message.map((msg, index) => (
+              <Alert key={index} variant="filled" severity="error">
+                {msg}
+              </Alert>
+            ))}
+
             {loading ? (
               <>
-                <Alert
-                  icon={<CheckIcon fontSize="inherit" />}
-                  variant="outlined"
-                  severity="success"
-                >
-                  This success Alert has a custom icon.
-                </Alert>
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  <LinearProgress color="success" />
+                  <LinearProgress color="inherit" />
                 </Stack>
               </>
             ) : (
