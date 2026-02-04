@@ -12,15 +12,21 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import Alert from "@mui/material/Alert";
-import CheckIcon from "@mui/icons-material/Check";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
 function Login() {
   const [open, setOpen] = useState(false);
   const [openText, setOpenText] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [usernameApproved, setUsernameApproved] = useState("");
-  const [passwordApproved, setPasswordApproved] = useState("");
+  const [login, setLogin] = useState({
+    username: "",
+    password: "",
+    error: false,
+    lodaing: false
+  });
+  const [usernameLogin, setUsernameLogin] = useState("");
+  const [passwordLogin, setPasswordLogin] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
@@ -30,7 +36,6 @@ function Login() {
     value: false,
     message: "",
   });
- 
 
   const navigate = useNavigate();
 
@@ -48,10 +53,31 @@ function Login() {
   const handleCloseText = () => {
     setOpenText(false);
   };
+  //handle login------------------------------------------------------------
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const log = await axios.post("http://127.0.0.1:3000/auth/login", {
+        username: login.username,
+        password_hash: login.password,
+      });
+      console.log("controllo login", log.data);
+      setLogin({...login, loading: true});
+      await delay(3000);
+      setLogin({...login, loading: false});
+      navigate("/home");
+    } catch (error) {
+            setLogin({...login, error:true});
+
+      console.error(error.response.data.message, error);
+    }
+  };
+  //------------------------------------------------------------------------
+  //handle di registrazione-------------------------------------------------
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
-    setErrorMessage({value:false,message:""})
+    setErrorMessage({ value: false, message: "" });
     console.log(username, email, password, nome, cognome);
     setLoading(true);
     await delay(3000);
@@ -67,7 +93,7 @@ function Login() {
       console.log(ins.status);
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setErrorMessage({value:true, message:error.response.data.errors});
+        setErrorMessage({ value: true, message: error.response.data.errors });
         if (error.response) {
           console.error(
             "Errore risposta server:",
@@ -82,13 +108,13 @@ function Login() {
   return (
     <>
       <div className="container-form">
-        <form className="login">
+        <form className="login" onSubmit={handleLogin}>
           <h1 className="title">SnapOrder</h1>
           <img src={Logo} alt="Logo" className="logo" />
           <TextField
-            value={usernameApproved}
+            value={login.username}
             onChange={(e) => {
-              setUsernameApproved(e.target.value);
+              setLogin({ ...login, username: e.target.value, error:false });
             }}
             type="text"
             className="text"
@@ -98,9 +124,9 @@ function Login() {
             margin="normal"
           />
           <TextField
-            value={passwordApproved}
+            value={login.password}
             onChange={(e) => {
-              setPasswordApproved(e.target.value);
+              setLogin({ ...login, password: e.target.value,error:false });
             }}
             type="password"
             className="text"
@@ -109,13 +135,22 @@ function Login() {
             variant="outlined"
             margin="normal"
           />
+          {login.loading && 
+          <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+            <CircularProgress color="success" />
+          </Stack>
+          }
+          {login.error &&
+          <Alert  variant="filled" severity="error">
+                  "Username o Password non validi"
+                </Alert>
+          }
           <Button
             type="submit"
             className="submit"
             variant="contained"
             color="success"
-            disabled={username === "" || password === ""}
-            onClick={() => navigate("/home")}
+            disabled={login.username === "" || login.password === ""}
           >
             Entra
           </Button>
@@ -170,7 +205,7 @@ function Login() {
                   setEmail(e.target.value);
                 }}
               />
-              
+
               <TextField
                 autoFocus
                 required
@@ -186,7 +221,7 @@ function Login() {
                   setUsername(e.target.value);
                 }}
               />
-              
+
               <TextField
                 autoFocus
                 required
@@ -209,12 +244,12 @@ function Login() {
                 </Button>
               </DialogActions>
             </form>
-            {errorMessage.value && 
+            {errorMessage.value &&
               errorMessage.message.map((msg, index) => (
-              <Alert key={index} variant="filled" severity="error">
-                {msg}
-              </Alert>
-            ))}
+                <Alert key={index} variant="filled" severity="error">
+                  {msg}
+                </Alert>
+              ))}
 
             {loading ? (
               <>
