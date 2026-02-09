@@ -30,20 +30,15 @@ const checkDetails = async()=>{
   try{
     const check = await axios.get("http://127.0.0.1:3000/dettagli/delay");
     const currentTime = new Date();
-    console.log("data corrente",currentTime)
     const updatedOrders = check.data.map((o) => {
-      console.log("Timestamp originale:", o.ordinato_il);
           const orderTime = new Date(o.ordinato_il); 
-          console.log("OrderTime parsato:", orderTime);
           const diffInMinutes = (currentTime - orderTime) / (1000 * 60); 
-          console.log("Differenza in minuti:", diffInMinutes);
           return {
             ...o,
             isOld: diffInMinutes > 15,
           };
         });
         setDetailsDelay(updatedOrders.filter(o => o.isOld));
-        console.log(updatedOrders);
   }catch(error){
     console.error("Impossibile caricare i dettagli in ritardo",error);
   }
