@@ -9,11 +9,14 @@ import CardCash from "../../components/cardCash/CardCash";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation,useNavigate } from "react-router";
 import { useDetailsDelay } from "../../context/delayContext";
+import { Navigate } from "react-router-dom";
+
 
 function Home() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [selectArea, setSelectArea] = useState(
     location.state?.selectArea || "Tavoli",
   ); //stato passato da navbar
@@ -84,6 +87,7 @@ const checkDetails = async()=>{
             exit={{ y: 50, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
+            {selectArea === "Veloce" && <Navigate to="/quick" replace/>}
             {selectArea === "Tavoli" && (
               <>
                 <div className="container-add-table">
