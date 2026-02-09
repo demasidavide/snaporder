@@ -140,7 +140,6 @@
   height: 34px;
   color: #2563eb;
   transition: transform 0.3s ease;
-  
 }
 
 .tavolo-card:hover .icon-chevron {
@@ -188,12 +187,44 @@
 .alert-delete {
   animation: fadeToOrange 1s ease-in-out forwards;
 }
-
+.alert-delay {
+  display: flex;
+  justify-content: center;
+  animation: fadeToRed 1s ease-in-out infinite;
+  border-radius: 10px;
+  padding: 5px;
+  font-weight: bold;
+}
+.alert-icon-table {
+  animation: scaleIcon 1s ease-in-out infinite;
+}
+@keyframes scaleIcon {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 @keyframes fadeToOrange {
   0% {
     background-color: transparent;
   }
   100% {
     background-color: rgba(255, 81, 0, 0.39);
+  }
+}
+@keyframes fadeToRed {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: var(--warning);
+  }
+  100% {
+    background-color: transparent;
   }
 }

@@ -27,6 +27,7 @@ import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+import { useDetailsDelay } from "../../context/delayContext";
 
 function Order() {
   const navigate = useNavigate();
@@ -46,13 +47,14 @@ function Order() {
     note: "",
     qta: "",
   });
-  const [selectedRows, setSelectedRows] = useState(() => {
-    const saved = localStorage.getItem("selectedRows");
-    return saved ? JSON.parse(saved) : [];
-  });
+  // const [selectedRows, setSelectedRows] = useState(() => {
+  //   const saved = localStorage.getItem("selectedRows");
+  //   return saved ? JSON.parse(saved) : [];
+  // });
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
   const { alertError, setAlertError, handleAlertError } = useAlertError();
+  const { detailsDelay, selectedRows, setSelectedRows} = useDetailsDelay();
 
   useEffect(() => {
     handleDetails();
@@ -144,6 +146,7 @@ function Order() {
     try {
       const del = await axios.delete(`http://127.0.0.1:3000/dettagli/${id}`);
       console.log("cancellazione ok di", id);
+      setSelectedRows(selectedRows.filter(rowId => rowId !== id));
       handleDetails();
       handleAlertConfirm("Ordinazione Cancellata");
       handleCloseAlert();
@@ -287,52 +290,59 @@ function Order() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {details.map((d) => (
-            <>
-              <TableRow>
-                <TableCell
-                  onClick={() => handleRowClick(d.id_dettaglio)}
-                  style={{
-                    backgroundColor: selectedRows.includes(d.id_dettaglio)
-                      ? "#10b981"
-                      : "transparent",
-                    textDecoration: selectedRows.includes(d.id_dettaglio)
-                      ? "line-through"
-                      : "none",
-                  }}
-                  component="th"
-                  scope="row"
-                >
-                  {d.nome_prodotti}
-                </TableCell>
-                <TableCell align="left">{d.quantita}</TableCell>
-                <TableCell align="right">
-                  <ModeIcon
-                    className="mod"
-                    onClick={() =>
-                      handleOpenModalMod(
-                        d.id_dettaglio,
-                        d.nome_prodotti,
-                        d.note,
-                        d.quantita,
-                      )
-                    }
-                  ></ModeIcon>
-                  <DeleteIcon
-                    className="delete"
-                    onClick={() =>
-                      handleOpenAlert(d.id_dettaglio, d.nome_prodotti)
-                    }
-                  ></DeleteIcon>
-                </TableCell>
-              </TableRow>
-              {d.note && (
-                <TableRow className="note">
-                  <TableCell colSpan={3}>↑ Note: {d.note}</TableCell>
+          {details.map((d) => {
+            const isDelayed = detailsDelay.some(
+              (detail) => detail.id_dettaglio === d.id_dettaglio,
+            );
+            return (
+              <>
+                <TableRow>
+                  <TableCell
+                    onClick={() => handleRowClick(d.id_dettaglio)}
+                    style={{
+                      backgroundColor: selectedRows.includes(d.id_dettaglio)
+                        ? "#10b981"
+                        : isDelayed
+                          ? "#ff5100"
+                          : "transparent",
+                      textDecoration: selectedRows.includes(d.id_dettaglio)
+                        ? "line-through"
+                        : "none",
+                    }}
+                    component="th"
+                    scope="row"
+                  >
+                    {d.nome_prodotti}
+                  </TableCell>
+                  <TableCell align="left">{d.quantita}</TableCell>
+                  <TableCell align="right">
+                    <ModeIcon
+                      className="mod"
+                      onClick={() =>
+                        handleOpenModalMod(
+                          d.id_dettaglio,
+                          d.nome_prodotti,
+                          d.note,
+                          d.quantita,
+                        )
+                      }
+                    ></ModeIcon>
+                    <DeleteIcon
+                      className="delete"
+                      onClick={() =>
+                        handleOpenAlert(d.id_dettaglio, d.nome_prodotti)
+                      }
+                    ></DeleteIcon>
+                  </TableCell>
                 </TableRow>
-              )}
-            </>
-          ))}
+                {d.note && (
+                  <TableRow className="note">
+                    <TableCell colSpan={3}>↑ Note: {d.note}</TableCell>
+                  </TableRow>
+                )}
+              </>
+            );
+          })}
         </TableBody>
       </Table>
       <div className="container-add">

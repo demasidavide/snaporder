@@ -7,7 +7,8 @@ router.get ("/delay",async (req,res)=>{
 try{
   const [rows] = await pool.query(`
     SELECT id_dettaglio,id_ordinazione,ordinato_il 
-    FROM dettagli_ordinazione; 
+    FROM dettagli_ordinazione
+    WHERE status = "pending"; 
     `)
     res.status(200).json(rows);
 }catch (e) {

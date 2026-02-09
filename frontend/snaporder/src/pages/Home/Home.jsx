@@ -10,6 +10,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { useDetailsDelay } from "../../context/delayContext";
 
 function Home() {
   const location = useLocation();
@@ -18,38 +19,38 @@ function Home() {
   ); //stato passato da navbar
   const [openModalAddTable, setOpenModalAddTable] = useState(false);
   const [table, setTable] = useState([]);
-  // const { detailsDelay,setDetailsDelay,checkDetails } = useDelayDetails();
-//funzione di caricamento dettagli in ritardo----------
-// useEffect(() => {
-//     let intervalId;
-//     if (table.length > 0) {
-//       checkDetails(); 
-//       intervalId = setInterval(checkDetails, 60000); 
-//     }
-//     const currentTime = new Date();
+  const { detailsDelay,setDetailsDelay } = useDetailsDelay();
 
-//         const updatedOrders = detailsDelay.map((order) => {
-//           const orderTime = new Date(order.timestamp); 
-//           const diffInMinutes = (currentTime - orderTime) / (1000 * 60); 
-//           return {
-//             ...order,
-//             isOld: diffInMinutes > 5,
-//           };
-//         });
-//         setDetailsDelay(updatedOrders);
-      
-    
-    // Pulizia dell'intervallo
-  //   return () => {
-  //     if (intervalId) {
-  //       clearInterval(intervalId);
-  //     }
-  //   };
-  // }, [table]); // Dipendenza su table
+//funzione per ceracre i dettagli in ritardo-----------
+const checkDetails = async()=>{
+  if (table.length > 0){
+  try{
+    const check = await axios.get("http://127.0.0.1:3000/dettagli/delay");
+    const currentTime = new Date();
+    console.log("data corrente",currentTime)
+    const updatedOrders = check.data.map((o) => {
+      console.log("Timestamp originale:", o.ordinato_il);
+          const orderTime = new Date(o.ordinato_il); 
+          console.log("OrderTime parsato:", orderTime);
+          const diffInMinutes = (currentTime - orderTime) / (1000 * 60); 
+          console.log("Differenza in minuti:", diffInMinutes);
+          return {
+            ...o,
+            isOld: diffInMinutes > 15,
+          };
+        });
+        setDetailsDelay(updatedOrders.filter(o => o.isOld));
+        console.log(updatedOrders);
+  }catch(error){
+    console.error("Impossibile caricare i dettagli in ritardo",error);
+  }
+}
+}
 //-----------------------------------------------------
   useEffect(() => {
     handleTable();
-  }, [selectArea, openModalAddTable, table]);
+    checkDetails();
+  }, [selectArea, openModalAddTable]);
 
   //handle per aprire la modale di inserimento tavoli
   const handleOpenModal = () => {
