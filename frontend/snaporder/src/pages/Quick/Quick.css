@@ -1,0 +1,28 @@
+@import "../../variables/variables.css";
+
+.container-selection{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neutral);
+    border-radius: 0px 0px 10px 10px;
+    padding: 20px;
+}
+.fd{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;}
+.plus-one{
+    width: 20%;
+    height: 50px;
+    border: solid 1px var(--confirm);
+    border-radius: 8px;
+}
+.veloce{
+    margin-top: 20px !important;
+}
+.quick-balance{
+     margin-top: 30px !important;
+}
+.quick-page{
+    margin-top: 10px !important;
+}
