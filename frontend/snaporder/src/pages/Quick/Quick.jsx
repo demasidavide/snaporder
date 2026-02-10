@@ -18,11 +18,34 @@ import ForwardIcon from "@mui/icons-material/Forward";
 
 function Quick() {
   const navigate = useNavigate();
-  const [showPage, setShowPage] = useState(false);
-  const [order, setOrder] = useState({
-    id: "",
-    created: false,
+
+  // Recupera lo stato da localStorage durante l'inizializzazione
+  const [showPage, setShowPage] = useState(() => {
+    const saved = localStorage.getItem("orderData");
+    if (saved) {
+      try {
+        const { showPage: savedShowPage } = JSON.parse(saved);
+        return savedShowPage || false;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
   });
+
+  const [order, setOrder] = useState(() => {
+    const saved = localStorage.getItem("orderData");
+    if (saved) {
+      try {
+        const { order: savedOrder } = JSON.parse(saved);
+        return savedOrder || { id: "", created: false };
+      } catch (e) {
+        return { id: "", created: false };
+      }
+    }
+    return { id: "", created: false };
+  });
+
   const [productList, setProductList] = useState({
     food: [],
     drink: [],
@@ -30,26 +53,11 @@ function Quick() {
   const [selectedFood, setSelectedFood] = useState(null);
   const [selectedDrink, setSelectedDrink] = useState(null);
 
-
-// Salva lo stato
-useEffect(() => {
-  console.log("Salvataggio:", { order, showPage });
-  localStorage.setItem("orderData", JSON.stringify({ order, showPage }));
-}, [order,showPage]);
-
-// Recupera lo stato al caricamento
-useEffect(() => {
-  const saved = localStorage.getItem("orderData");
-  console.log("Recuperato:", saved);
-  if (saved) {
-    const { order: savedOrder, showPage: savedShowPage } = JSON.parse(saved);
-    console.log("Parsed:", { savedOrder, savedShowPage });
-    setOrder(savedOrder);
-    setShowPage(savedShowPage);
-  }
-}, []);
-
-
+  // Salva lo stato quando cambia
+  useEffect(() => {
+    console.log("Salvataggio:", { order, showPage });
+    localStorage.setItem("orderData", JSON.stringify({ order, showPage }));
+  }, [order, showPage]);
 
   useEffect(() => {
     handleProduct();
@@ -113,6 +121,9 @@ useEffect(() => {
       const del = await axios.delete(
         `http://127.0.0.1:3000/ordinazioni/${order.id}`,
       );
+      setOrder({id:"",created:false})
+      setShowPage(false);
+      localStorage.removeItem("orderData");
       console.log("ordinazione cancellata", order.id);
     } catch (error) {
       console.error("ordine non cancellato", error);
