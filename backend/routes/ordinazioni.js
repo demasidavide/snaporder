@@ -42,6 +42,7 @@ router.post("/", async (req, res) => {
     );
     res.status(201).json({
       message: `Tavolo a nome ${nome_ordine} da ${numero_persone} posti inserito con successo`,
+      id_ordinazione: result[0].insertId,
     });
   } catch (e) {
     res.status(500).json({ error: "Errore nel Database" });

@@ -11,12 +11,7 @@
     display: flex;
     flex-direction: row;
     gap: 10px;}
-.plus-one{
-    width: 20%;
-    height: 50px;
-    border: solid 1px var(--confirm);
-    border-radius: 8px;
-}
+
 .veloce{
     margin-top: 20px !important;
 }

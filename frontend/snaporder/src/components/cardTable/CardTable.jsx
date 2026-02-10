@@ -32,6 +32,7 @@ function CardTable({ name, num, located, id, onClick, onDelete }) {
     try {
       const del = await axios.delete(`http://127.0.0.1:3000/ordinazioni/${id}`);
       console.log("cancellazione riuscita");
+      handleClose();
     } catch (error) {
       console.error("Impossibile cancellare", error);
     }

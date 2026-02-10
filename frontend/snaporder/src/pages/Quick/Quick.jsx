@@ -6,6 +6,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { DataGrid } from "@mui/x-data-grid";
 import TextField from "@mui/material/TextField";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,7 +23,74 @@ function Quick() {
     id: "",
     created: false,
   });
+  const [productList, setProductList] = useState({
+    food: [],
+    drink: [],
+  });
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [selectedDrink, setSelectedDrink] = useState(null);
 
+
+// Salva lo stato
+useEffect(() => {
+  console.log("Salvataggio:", { order, showPage });
+  localStorage.setItem("orderData", JSON.stringify({ order, showPage }));
+}, [order,showPage]);
+
+// Recupera lo stato al caricamento
+useEffect(() => {
+  const saved = localStorage.getItem("orderData");
+  console.log("Recuperato:", saved);
+  if (saved) {
+    const { order: savedOrder, showPage: savedShowPage } = JSON.parse(saved);
+    console.log("Parsed:", { savedOrder, savedShowPage });
+    setOrder(savedOrder);
+    setShowPage(savedShowPage);
+  }
+}, []);
+
+
+
+  useEffect(() => {
+    handleProduct();
+  }, []);
+
+  //carica cibi----------------------------------------------------------
+  const handleProduct = async () => {
+    try {
+      const [resFood, resDrink] = await Promise.all([
+        axios.get("http://127.0.0.1:3000/prodotti/cibi"),
+        axios.get("http://127.0.0.1:3000/prodotti/bevande"),
+      ]);
+      setProductList({
+        food: resFood.data,
+        drink: resDrink.data,
+      });
+    } catch (error) {
+      console.error("imnpossibile caricare i cibi", error);
+    }
+  };
+  //----------------------------------------------------------------------
+  //aggiungi prodotti alla lista------------------------------------------
+  const addProduct = async (product) => {
+    if (!product) return;
+    try {
+      const ins = await axios.post("http://127.0.0.1:3000/dettagli", {
+        id_ordinazione: order.id,
+        id_prodotto: product.id_prodotto,
+        quantita: 1,
+        prezzo_unitario: product.prezzo_unitario,
+        subtotale: product.prezzo_unitario,
+        note: "veloce",
+      });
+      console.log(ins.data);
+    } catch (error) {
+      console.error("impossibile aggiungere prodotto alla lista", error);
+    }
+  };
+  //----------------------------------------------------------------------
+  //aggiornamento lista prodotti inseriti---------------------------------
+  //crea tavolo veloce e lo mostra subito---------------------------------
   const handelOrder = async () => {
     try {
       const ins = await axios.post("http://127.0.0.1:3000/ordinazioni", {
@@ -32,23 +100,25 @@ function Quick() {
         nome_ordine: "veloce",
         posizione: "sotto",
       });
+      console.log(ins.data);
       return ins.data.id_ordinazione;
     } catch (error) {
       console.error("impossibile aggiungere ordine veloce", error);
     }
   };
-
+  //--------------------------------------------------------------------
+  //cancellazione ordine appena creato------------------------------------
   const deleteOrder = async () => {
     try {
       const del = await axios.delete(
         `http://127.0.0.1:3000/ordinazioni/${order.id}`,
       );
-      console.log("ordinazione cancellata", order.Id);
+      console.log("ordinazione cancellata", order.id);
     } catch (error) {
       console.error("ordine non cancellato", error);
     }
   };
-
+  //-----------------------------------------------------------------------
   return (
     <>
       <AnimatePresence mode="wait">
@@ -89,9 +159,8 @@ function Quick() {
                   const id = await handelOrder();
                   setOrder({ created: true, id });
                   setShowPage(true);
-                  console.log(id)
                 } catch (e) {
-                  console.log("errore await")
+                  console.log("errore await");
                 }
               }}
             >
@@ -106,88 +175,116 @@ function Quick() {
               exit={{ y: -100, opacity: 0 }}
               transition={{ duration: 0.45, ease: "easeInOut" }}
             >
-              <Paper sx={{ height: 300, width: "100%" }}>
-                <DataGrid
-                  columns={[
-                    { field: "prodotto", headerName: "Prodotto", width: 150 },
-                    { field: "quantita", headerName: "Quantità", width: 100 },
-                    { field: "prezzo", headerName: "Prezzo", width: 100 },
-                  ]}
-                  hideFooter={true}
-                  paginationModel={{ pageSize: 100, page: 0 }}
-                  pageSizeOptions={[100]}
-                  checkboxSelection
-                  sx={{ border: 0 }}
+              <form>
+                <Paper sx={{ height: 300, width: "100%" }}>
+                  <DataGrid
+                    columns={[
+                      { field: "prodotto", headerName: "Prodotto", width: 150 },
+                      { field: "quantita", headerName: "Quantità", width: 100 },
+                      { field: "prezzo", headerName: "Prezzo", width: 100 },
+                    ]}
+                    hideFooter={true}
+                    paginationModel={{ pageSize: 100, page: 0 }}
+                    pageSizeOptions={[100]}
+                    checkboxSelection
+                    sx={{ border: 0 }}
+                  />
+                </Paper>
+                <div className="container-selection">
+                  <span className="fd" style={{ marginBottom: "10px" }}>
+                    <Autocomplete
+                      className="select-food-drink"
+                      disablePortal
+                      options={productList.food}
+                      getOptionLabel={(option) => option.nome}
+                      sx={{ width: 300 }}
+                      value={selectedFood}
+                      onChange={(event, newValue) => {
+                        setSelectedFood(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Cibo" />
+                      )}
+                    />
+                    <IconButton
+                      onClick={() => addProduct(selectedFood)}
+                      sx={{
+                        width: "20%",
+                        height: "55px",
+                        border: "2px solid var(--confirm)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <PlusOneIcon></PlusOneIcon>
+                    </IconButton>
+                  </span>
+                  <span className="fd">
+                    <Autocomplete
+                      className="select-food-drink"
+                      disablePortal
+                      options={productList.drink}
+                      getOptionLabel={(option) => option.nome}
+                      sx={{ width: 300 }}
+                      value={selectedDrink}
+                      onChange={(event, newValue) => {
+                        setSelectedDrink(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Bevanda" />
+                      )}
+                    />
+                    <IconButton
+                      onClick={() => addProduct(selectedDrink)}
+                      sx={{
+                        width: "20%",
+                        height: "55px",
+                        border: "2px solid var(--confirm)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <PlusOneIcon></PlusOneIcon>
+                    </IconButton>
+                  </span>
+                </div>
+                <TextField
+                  className="text-parziale veloce"
+                  id="outlined-read-only-input"
+                  label="Totale"
+                  value="10€"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
                 />
-              </Paper>
-              <div className="container-selection">
-                <span className="fd">
-                  <Autocomplete
-                    className="select-food-drink"
-                    disablePortal
-                    options={""}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Cibo" />
-                    )}
-                  />
-                  <svg className="plus-one">
-                    <PlusOneIcon></PlusOneIcon>
-                  </svg>
-                </span>
-                <span className="fd">
-                  <Autocomplete
-                    className="select-food-drink"
-                    disablePortal
-                    options={""}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Bevanda" />
-                    )}
-                  />
-                  <svg className="plus-one">
-                    <PlusOneIcon></PlusOneIcon>
-                  </svg>
-                </span>
-              </div>
-              <TextField
-                className="text-parziale veloce"
-                id="outlined-read-only-input"
-                label="Totale"
-                value="10€"
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-              />
-              <TextField
-                className="text-parziale veloce"
-                id="outlined-read-only-input"
-                label="Totale"
-                value="10€"
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                className="text-payment quick-balance"
-                id="outlined-basic"
-                label="Inserisci Saldo"
-                variant="outlined"
-                margin="normal"
-              />
-              <Button
-                type="submit"
-                className="submit-cash quick-page"
-                variant="contained"
-                color="success"
-              >
-                Paga
-              </Button>
+                <TextField
+                  className="text-parziale veloce"
+                  id="outlined-read-only-input"
+                  label="Totale"
+                  value="10€"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                />
+                <TextField
+                  type="number"
+                  className="text-payment quick-balance"
+                  id="outlined-basic"
+                  label="Inserisci Saldo"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <Button
+                  type="submit"
+                  className="submit-cash quick-page"
+                  variant="contained"
+                  color="success"
+                >
+                  Paga
+                </Button>
+              </form>
             </motion.div>
           )}
         </motion.div>
