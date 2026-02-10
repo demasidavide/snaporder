@@ -16,6 +16,7 @@ try{
   }
 });
 
+//GET per somma prezzo unitario usato solo per ordine veloce
 //GET con join prodotti per tabella principale CIBO
 router.get("/food/:id", async (req, res) => {
   const { id } = req.params;

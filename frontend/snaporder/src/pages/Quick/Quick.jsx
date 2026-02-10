@@ -12,6 +12,10 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
+import AlertError from "../../components/alertError/AlertError";
+import { useAlertError } from "../../hooks/useAlertError";
+import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
+import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import ForwardIcon from "@mui/icons-material/Forward";
@@ -52,6 +56,14 @@ function Quick() {
   });
   const [selectedFood, setSelectedFood] = useState(null);
   const [selectedDrink, setSelectedDrink] = useState(null);
+  const [list, setList] = useState([]);
+  const [toPay, setToPay] = useState(0);
+  const total = list.reduce((acc, item) => {
+    return acc + parseFloat(item.prezzo);
+  }, 0);
+  const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
+    useAlertConfirm();
+  const { alertError, setAlertError, handleAlertError } = useAlertError();
 
   // Salva lo stato quando cambia
   useEffect(() => {
@@ -61,6 +73,7 @@ function Quick() {
 
   useEffect(() => {
     handleProduct();
+    handleDetails();
   }, []);
 
   //carica cibi----------------------------------------------------------
@@ -91,6 +104,7 @@ function Quick() {
         subtotale: product.prezzo_unitario,
         note: "veloce",
       });
+      handleDetails();
       console.log(ins.data);
     } catch (error) {
       console.error("impossibile aggiungere prodotto alla lista", error);
@@ -98,6 +112,25 @@ function Quick() {
   };
   //----------------------------------------------------------------------
   //aggiornamento lista prodotti inseriti---------------------------------
+  const handleDetails = async () => {
+    if (!showPage) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:3000/dettagli/pay/${order.id}`,
+      );
+      const resData = res.data.map((r) => ({
+        id_dettaglio: r.id_dettaglio,
+        prodotto: r.nome_prodotti,
+        quantita: r.quantita,
+        prezzo: r.prezzo_unitario,
+      }));
+      setList(resData);
+      console.log(resData);
+    } catch (error) {
+      console.error("impossibile caricare dettagli ordine", error);
+    }
+  };
+  //----------------------------------------------------------------------
   //crea tavolo veloce e lo mostra subito---------------------------------
   const handelOrder = async () => {
     try {
@@ -114,14 +147,25 @@ function Quick() {
       console.error("impossibile aggiungere ordine veloce", error);
     }
   };
-  //--------------------------------------------------------------------
+  //----------------------------------------------------------------------
+  //cancellazione riga singola--------------------------------------------
+  const handleDeleteRow = async (id) => {
+    try {
+      const del = await axios.delete(`http://127.0.0.1:3000/dettagli/${id}`);
+      console.log(del.data);
+      handleDetails();
+    } catch (error) {
+      console.error("impossibile cancellare dettaglio", error);
+    }
+  };
+  //----------------------------------------------------------------------
   //cancellazione ordine appena creato------------------------------------
   const deleteOrder = async () => {
     try {
       const del = await axios.delete(
         `http://127.0.0.1:3000/ordinazioni/${order.id}`,
       );
-      setOrder({id:"",created:false})
+      setOrder({ id: "", created: false });
       setShowPage(false);
       localStorage.removeItem("orderData");
       console.log("ordinazione cancellata", order.id);
@@ -130,8 +174,40 @@ function Quick() {
     }
   };
   //-----------------------------------------------------------------------
+  //submit per inserimento scontrino,eliminazione ordine da localstorage e back alla home
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const ins = await axios.post("http://127.0.0.1:3000/scontrini", {
+        id_ordinazione: order.id,
+        totale_pagato: toPay,
+      });
+      handleAlertConfirm("Ordine saldato!")
+      console.log(ins.data);
+
+      setTimeout(() => {
+      localStorage.removeItem("orderData");
+      navigate("/home");
+    }, 2000);
+      
+    } catch(error){
+      console.error("impossibile saldae l ordine", error);
+      handleAlertError("Errore - Saldo non riuscito")
+    }
+  };
+  //------------------------------------------------------------------------
   return (
     <>
+    <AlertError
+            open={alertError.open}
+            onClose={() => setAlertError({ open: false, message: "" })}
+            message={alertError.message}
+          ></AlertError>
+          <AlertConfirm
+            open={alertConfirm.open}
+            onClose={() => setAlertConfirm({ open: false, message: "" })}
+            message={alertConfirm.message}
+          ></AlertConfirm>
       <AnimatePresence mode="wait">
         <motion.div
           initial={{ x: -100, opacity: 0 }}
@@ -186,18 +262,35 @@ function Quick() {
               exit={{ y: -100, opacity: 0 }}
               transition={{ duration: 0.45, ease: "easeInOut" }}
             >
-              <form>
+              <form on onSubmit={handleSubmit}>
                 <Paper sx={{ height: 300, width: "100%" }}>
                   <DataGrid
+                    rows={list}
                     columns={[
-                      { field: "prodotto", headerName: "Prodotto", width: 150 },
-                      { field: "quantita", headerName: "Quantità", width: 100 },
+                      { field: "prodotto", headerName: "Prodotto", width: 200 },
+                      //{ field: "quantita", headerName: "Quantità", width: 100 },
                       { field: "prezzo", headerName: "Prezzo", width: 100 },
+                      {
+                        field: "actions",
+                        headerName: "Azioni",
+                        width: 100,
+                        sortable: false,
+                        renderCell: (params) => (
+                          <IconButton
+                            color="error"
+                            onClick={() =>
+                              handleDeleteRow(params.row.id_dettaglio)
+                            }
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        ),
+                      },
                     ]}
+                    getRowId={(row) => row.id_dettaglio}
                     hideFooter={true}
                     paginationModel={{ pageSize: 100, page: 0 }}
                     pageSizeOptions={[100]}
-                    checkboxSelection
                     sx={{ border: 0 }}
                   />
                 </Paper>
@@ -261,24 +354,15 @@ function Quick() {
                   className="text-parziale veloce"
                   id="outlined-read-only-input"
                   label="Totale"
-                  value="10€"
+                  value={`${total.toFixed(2)}€`}
+                  sx={{ width: "30%" }}
                   slotProps={{
                     input: {
                       readOnly: true,
                     },
                   }}
                 />
-                <TextField
-                  className="text-parziale veloce"
-                  id="outlined-read-only-input"
-                  label="Totale"
-                  value="10€"
-                  slotProps={{
-                    input: {
-                      readOnly: true,
-                    },
-                  }}
-                />
+
                 <TextField
                   type="number"
                   className="text-payment quick-balance"
@@ -286,6 +370,8 @@ function Quick() {
                   label="Inserisci Saldo"
                   variant="outlined"
                   margin="normal"
+                  value={toPay}
+                  onChange={(e)=>setToPay(e.target.value)}
                 />
                 <Button
                   type="submit"

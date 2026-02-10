@@ -46,8 +46,6 @@ useEffect(() => {
     
   }, []);
 
-
-
   useEffect(() => {
     handleDetails();
   }, []);
