@@ -1,0 +1,9 @@
+@import "../../variables/variables.css";
+
+
+.title-menu{
+    margin:10px 0px;
+    color: var(--neutral);
+    font-size: 30px;
+    font-weight: bold;
+}

@@ -41,7 +41,9 @@ export default function Ham() {
       <Divider />
       <List>
         <ListItem>
-          <ListItemButton>
+          <ListItemButton
+          onClick={()=> navigate('/create')}
+          >
             <MenuBookIcon></MenuBookIcon>
             Gestisci Menu
             <ListItemText />

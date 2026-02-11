@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home.jsx";
 import Order from "./pages/Order/Order.jsx";
 import Pay from "./pages/Pay/Pay.jsx"
 import Quick from "./pages/Quick/Quick.jsx";
+import CreateMenu from "./pages/CreateMenu/CreateMenu.jsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/order" element={<Order />} />
         <Route path="/pay" element={<Pay />} />
         <Route path="/quick" element={<Quick />} />
+        <Route path="/create" element={<CreateMenu />} />
       </Routes>
    
   );
