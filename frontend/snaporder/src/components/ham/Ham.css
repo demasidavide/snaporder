@@ -1,0 +1,8 @@
+@import "../../variables/variables.css";
+
+.menu{
+  color: var(--neutral) !important;
+  margin-left:80px !important;
+  border-radius: 10px !important;
+  border:solid 2px var(--secondary) !important;
+}

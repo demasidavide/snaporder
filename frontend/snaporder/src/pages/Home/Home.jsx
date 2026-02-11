@@ -2,10 +2,12 @@ import "./Home.css";
 import Navbar from "../../components/navbar/Navbar";
 import CardTable from "../../components/cardTable/CardTable";
 import ProductList from "../../components/productList/ProductList";
+import Ham from "../../components/ham/Ham";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import ModalTable from "../../components/modalTable/ModalTable";
 import CardCash from "../../components/cardCash/CardCash";
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -72,7 +74,11 @@ const checkDetails = async()=>{
   };
   return (
     <>
+    <div className="container-menu">
       <Navbar selectArea={selectArea} setSelectArea={setSelectArea}></Navbar>
+    <Ham></Ham>
+    </div>
+
       <div className="container-main">
         <AnimatePresence mode="wait">
           <motion.div

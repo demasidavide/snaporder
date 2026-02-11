@@ -2,14 +2,24 @@
 
 .navbar-toggle-button {
   color: var(--neutral) !important;
+  margin-left:15px !important;
 }
 .selected {
   color: var(--neutral) !important;
-  border-radius: 5px !important;
-  border: solid 1px var(--neutral) !important;
+  border-bottom: solid 2px var(--focus) !important;
+  translate: y(15px) !important;
+  margin-left:20px !important;
+
 }
 .MuiBadge-badge{
     right: 5px !important;
     top: 10px !important;
     padding: '0 4px';
+}
+.menu{
+  color: var(--neutral) !important;
+  margin-left:80px !important;
+  border-radius: 10px !important;
+  border:solid 2px var(--secondary) !important;
+  padding:5px !important;
 }

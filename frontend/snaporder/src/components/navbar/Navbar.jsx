@@ -2,6 +2,11 @@ import "./Navbar.css";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Badge from "@mui/material/Badge";
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import EuroSymbolIcon from '@mui/icons-material/EuroSymbol';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -21,6 +26,12 @@ function Navbar({ selectArea, setSelectArea }) {
     handleBadge();
   }, [selectArea]);
 
+  const handleChange = (event, newValue) => {
+    if (newValue !== null) {
+      setSelectArea(newValue);
+    }
+  };
+
   return (
     <>
       <ToggleButtonGroup
@@ -28,9 +39,7 @@ function Navbar({ selectArea, setSelectArea }) {
         value={selectArea}
         exclusive
         aria-label="Platform"
-        onChange={(e) => {
-          setSelectArea(e.target.value);
-        }}
+        onChange={handleChange}
       >
         <ToggleButton
           className={
@@ -38,7 +47,7 @@ function Navbar({ selectArea, setSelectArea }) {
           }
           value="Veloce"
         >
-          Veloce
+          <ElectricBoltIcon></ElectricBoltIcon>
         </ToggleButton>
         <Badge badgeContent={badge} color="success">
           <ToggleButton
@@ -47,7 +56,7 @@ function Navbar({ selectArea, setSelectArea }) {
             }
             value="Tavoli"
           >
-            Tavoli
+            <RestaurantIcon></RestaurantIcon>
           </ToggleButton>
         </Badge>
         <ToggleButton
@@ -56,7 +65,7 @@ function Navbar({ selectArea, setSelectArea }) {
           }
           value="Prodotti"
         >
-          Prodotti
+          <FastfoodIcon></FastfoodIcon>
         </ToggleButton>
         <ToggleButton
           className={
@@ -64,9 +73,11 @@ function Navbar({ selectArea, setSelectArea }) {
           }
           value="Cassa"
         >
-          Cassa
+          <EuroSymbolIcon></EuroSymbolIcon>
         </ToggleButton>
+        
       </ToggleButtonGroup>
+      
     </>
   );
 }
