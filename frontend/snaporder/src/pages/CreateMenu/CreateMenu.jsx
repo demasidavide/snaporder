@@ -6,12 +6,12 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Fab from "@mui/material/Fab";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -33,29 +33,43 @@ import { useAlertError } from "../../hooks/useAlertError";
 import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import axios from "axios";
+import { useState } from "react";
 
 export default function CreateMenu() {
-    const navigate = useNavigate();
-    const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
-        useAlertConfirm();
-      const { alertError, setAlertError, handleAlertError } = useAlertError();
+  const navigate = useNavigate();
+  const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
+    useAlertConfirm();
+  const { alertError, setAlertError, handleAlertError } = useAlertError();
+  
+
+  const handleProduct = async()=>{
+    try{
+      const res = await axios.get("http://127.0.0.1:3000/prodotti/cibi");
+      setProductFood({
+        id: res.data.id_prodotto,
+        name: res.data.nome,
+        prezzo: res.data.prezzo_unitario,
+        disponibile: res.data.disponibile
+      })
+    }catch(error){
+      console.error("impossibile caricare cibi", error);
+    }
+  }
+
   return (
     <>
-    <AlertError
-            open={alertError.open}
-            onClose={() => setAlertError({ open: false, message: "" })}
-            message={alertError.message}
-          ></AlertError>
-          <AlertConfirm
-            open={alertConfirm.open}
-            onClose={() => setAlertConfirm({ open: false, message: "" })}
-            message={alertConfirm.message}
-          >
-          </AlertConfirm>
+      <AlertError
+        open={alertError.open}
+        onClose={() => setAlertError({ open: false, message: "" })}
+        message={alertError.message}
+      ></AlertError>
+      <AlertConfirm
+        open={alertConfirm.open}
+        onClose={() => setAlertConfirm({ open: false, message: "" })}
+        message={alertConfirm.message}
+      ></AlertConfirm>
       <svg className="close" onClick={() => navigate("/home")}>
-        <CloseIcon
-        className="title-menu"
-        ></CloseIcon>
+        <CloseIcon className="title-menu"></CloseIcon>
       </svg>
       <p className="title-menu">Bar</p>
       <Accordion>
@@ -137,7 +151,7 @@ export default function CreateMenu() {
           </Typography>
         </AccordionDetails>
       </Accordion>
-      
+
       <div className="container-add">
         <Fab
           onClick={() => setOpenModalOrder(!openModalOrder)}
@@ -147,7 +161,6 @@ export default function CreateMenu() {
         >
           <AddIcon />
         </Fab>
-        
       </div>
     </>
   );

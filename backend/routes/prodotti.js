@@ -44,7 +44,7 @@ router.get("/bevande", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM prodotti WHERE tipo_prodotto = 'bevanda'");
     if(rows.affectedRows = 0){
-        return res.status(404).json({error:`Nessun elemento trovato`})
+        return res.status(404).json({error:`Nessun elemento trovato`});
     }
     res.status(200).json(rows);
   } catch (e) {

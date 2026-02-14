@@ -28,15 +28,16 @@ import AlertConfirm from "../alertConfirm/AlertConfirm";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useProductContext } from "../../context/ProductContext";
 
 function ProductList() {
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
   const [openModal, setOpenModal] = useState(false); //apertura modale add prodotti
   const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
   const [selectedType, setSelectedType] = useState("Cibo"); //selezione tipo da visualizzare
-  const [food, setFood] = useState([]); //elenco cibo
-  const [drink, setDrink] = useState([]); //elenco bevande
-  const [allProducts, setAllProducts] = useState([]); //tutti i prodotti
+  // const [food, setFood] = useState([]); 
+  // const [drink, setDrink] = useState([]); 
+  // const [allProducts, setAllProducts] = useState([]); 
   const [nameProd, setNameProd] = useState(""); //nome nuovo prodotto
   const [descProd, setDescProd] = useState(""); //descrizione nuovo prodotto
   const [priceProd, setPriceProd] = useState(""); //prezzo nuovo prodotto
@@ -52,6 +53,7 @@ function ProductList() {
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
   const { alertError, setAlertError, handleAlertError } = useAlertError();
+  const {food, setFood,drink, setDrink,allProducts, setAllProducts} = useProductContext();
 
   useEffect(() => {
     handleShowProduct();
