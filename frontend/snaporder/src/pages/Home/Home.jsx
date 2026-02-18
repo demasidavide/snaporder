@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useLocation,useNavigate } from "react-router";
 import { useDetailsDelay } from "../../context/delayContext";
 import { Navigate } from "react-router-dom";
-
+import { useFetchProducts } from "../../hooks/fetchProduct/useFetchProducts";
 
 function Home() {
   const location = useLocation();
@@ -25,8 +25,9 @@ function Home() {
   const [openModalAddTable, setOpenModalAddTable] = useState(false);
   const [table, setTable] = useState([]);
   const { detailsDelay,setDetailsDelay } = useDetailsDelay();
+  const { fetchAll } = useFetchProducts();
 
-//funzione per ceracre i dettagli in ritardo-----------
+//funzione per cercare i dettagli in ritardo-----------------------
 const checkDetails = async()=>{
   if (table.length > 0){
   try{
@@ -50,6 +51,7 @@ const checkDetails = async()=>{
   useEffect(() => {
     handleTable();
     checkDetails();
+    fetchAll();
   }, [selectArea, openModalAddTable]);
 
   //handle per aprire la modale di inserimento tavoli

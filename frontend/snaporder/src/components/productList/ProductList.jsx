@@ -29,15 +29,16 @@ import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useProductContext } from "../../context/ProductContext";
+import { useFetchProducts } from "../../hooks/fetchProduct/useFetchProducts";
 
 function ProductList() {
   const [openAlert, setOpenAlert] = useState(false); //apertura alert cancellazione
   const [openModal, setOpenModal] = useState(false); //apertura modale add prodotti
   const [openModalMod, setOpenModalMod] = useState(false); //apertura modale modifica prodotti
   const [selectedType, setSelectedType] = useState("Cibo"); //selezione tipo da visualizzare
-  // const [food, setFood] = useState([]); 
-  // const [drink, setDrink] = useState([]); 
-  // const [allProducts, setAllProducts] = useState([]); 
+  // const [food, setFood] = useState([]);
+  // const [drink, setDrink] = useState([]);
+  // const [allProducts, setAllProducts] = useState([]);
   const [nameProd, setNameProd] = useState(""); //nome nuovo prodotto
   const [descProd, setDescProd] = useState(""); //descrizione nuovo prodotto
   const [priceProd, setPriceProd] = useState(""); //prezzo nuovo prodotto
@@ -53,10 +54,19 @@ function ProductList() {
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
   const { alertError, setAlertError, handleAlertError } = useAlertError();
-  const {food, setFood,drink, setDrink,allProducts, setAllProducts} = useProductContext();
+  const {
+    food,
+    setFood,
+    drink,
+    setDrink,
+    allProducts,
+    setAllProducts,
+  } = useProductContext();
+
+  const { fetchAll } = useFetchProducts();
 
   useEffect(() => {
-    handleShowProduct();
+    fetchAll();
   }, [selectedType, openModal]);
 
   //gestione apertura alert cancellazione---------------
@@ -106,36 +116,36 @@ function ProductList() {
   };
   //------------------------------------------------------
   //Lettura prodotti -cibi-bevande-tutti------------------
-  const handleShowProduct = async () => {
-    try {
-      if (selectedType === "Cibo") {
-        const res = await axios.get("http://127.0.0.1:3000/prodotti/cibi");
-        if (res.data.length >= 1) {
-          setFood(res.data);
-        } else {
-          console.log("nessun cibo trovato");
-        }
-      }
-      if (selectedType === "Bevande") {
-        const res = await axios.get("http://127.0.0.1:3000/prodotti/bevande");
-        if (res.data.length >= 1) {
-          setDrink(res.data);
-        } else {
-          console.log("nessuna bevanda trovata");
-        }
-      }
-      if (selectedType === "Tutti") {
-        const res = await axios.get("http://127.0.0.1:3000/prodotti/");
-        if (res.data.length >= 1) {
-          setAllProducts(res.data);
-        } else {
-          console.log("nessun all trovato");
-        }
-      }
-    } catch (error) {
-      console.error("errore", error);
-    }
-  };
+  // const handleShowProduct = async () => {
+  //   try {
+  //     if (selectedType === "Cibo") {
+  //       const res = await axios.get("http://127.0.0.1:3000/prodotti/cibi");
+  //       if (res.data.length >= 1) {
+  //         setFood(res.data);
+  //       } else {
+  //         console.log("nessun cibo trovato");
+  //       }
+  //     }
+  //     if (selectedType === "Bevande") {
+  //       const res = await axios.get("http://127.0.0.1:3000/prodotti/bevande");
+  //       if (res.data.length >= 1) {
+  //         setDrink(res.data);
+  //       } else {
+  //         console.log("nessuna bevanda trovata");
+  //       }
+  //     }
+  //     if (selectedType === "Tutti") {
+  //       const res = await axios.get("http://127.0.0.1:3000/prodotti/");
+  //       if (res.data.length >= 1) {
+  //         setAllProducts(res.data);
+  //       } else {
+  //         console.log("nessun all trovato");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("errore", error);
+  //   }
+  // };
   //--------------------------------------------------------------------
   //Aggiunta nuovo prodotto---------------------------------------------
   const handleNewProd = async (e) => {
@@ -163,9 +173,9 @@ function ProductList() {
         `http://127.0.0.1:3000/prodotti/${idToDelMod}`,
       );
       console.log(del.status);
+      //fetchAll();
       handleAlertConfirm("Prodotto cancellato");
       handleCloseAlert();
-      handleShowProduct();
     } catch (error) {
       handleCloseAlert();
       handleAlertError("Errore- Attendi e riprova");
@@ -187,7 +197,7 @@ function ProductList() {
         },
       );
       console.log(mod.status, `modifica effettuata con id ${idToDelMod}`);
-      handleShowProduct();
+      fetchAll();
       handleAlertConfirm("Prodotto modificato");
       handleCloseModalMod();
     } catch (error) {

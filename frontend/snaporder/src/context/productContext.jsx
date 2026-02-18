@@ -7,6 +7,7 @@ export function ProductProvider({ children }) {
   const [food, setFood] = useState([]); //elenco cibo
   const [drink, setDrink] = useState([]); //elenco bevande
   const [allProducts, setAllProducts] = useState([]); //tutti i prodotti
+  const [menuProducts, setMenuProducts] = useState([]); //prodotti del menu
 
   return (
     <ProductContext.Provider
@@ -17,6 +18,8 @@ export function ProductProvider({ children }) {
         setDrink,
         allProducts,
         setAllProducts,
+        menuProducts,
+        setMenuProducts,
       }}
     >
       {children}

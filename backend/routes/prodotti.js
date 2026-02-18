@@ -84,7 +84,7 @@ router.delete("/:id", async (req, res) => {
         .status(400)
         .json({ error: `ID ${id} non trovato o non valido` });
     }
-    const result = await pool.query(
+    const [result] = await pool.query(
       `
             DELETE FROM prodotti WHERE id_prodotto = ?`,
       [id],
@@ -94,7 +94,8 @@ router.delete("/:id", async (req, res) => {
     }
     res.status(204).send();
   } catch (e) {
-    res.status(500).json({ error: "Errore nel database" });
+    console.error("Errore cancellazione:", e);
+    res.status(500).json({ error: "Errore nel database"});
   }
 });
 //Put modifica con id--------------------------------------------------------
