@@ -1,29 +1,53 @@
 import "./CreateMenu.css";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import AlertError from "../../components/alertError/AlertError";
-import { useAlertError } from "../../hooks/useAlertError";
 import AlertConfirm from "../../components/alertConfirm/AlertConfirm";
+import { useAlertError } from "../../hooks/useAlertError";
 import { useAlertConfirm } from "../../hooks/useAlertConfirm";
 import { useProductContext } from "../../context/ProductContext";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { TableAccordion } from "../../components/tableAccordion/TableAccordion";
+import { FormAccordion } from "../../components/formAccordion/FormAccordion";
+import axios from "axios";
 
 export default function CreateMenu() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    productSelected: "",
+    note: "",
+  });
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
   const { alertError, setAlertError, handleAlertError } = useAlertError();
   const { allProducts, food, drink, menuProducts, setMenuProducts } =
     useProductContext();
+  //filtro i prodotti per categoria per generare le tabelle
+  const barMenu = menuProducts.filter(p=>p.categoria === 'bar');
+
+    const handleSubmit = async(e,categoria)=>{
+      e.preventDefault();
+      try{
+        const res = await axios.post("http://127.0.0.1:3000/menu",{
+          id_prodotto: formData.productSelected,
+          note: formData.note,
+          categoria:categoria
+        })
+        // Ricarica i prodotti del menu
+    const menuRes = await axios.get("http://127.0.0.1:3000/menu");
+    setMenuProducts(menuRes.data);
+
+        handleAlertConfirm("Prodotto inserito nel menù")
+        setFormData({productSelected:"",note:""})
+      }catch(error){
+        console.error("impossibile inserire nel menu",error)
+      }
+    } 
 
   return (
     <>
@@ -50,21 +74,20 @@ export default function CreateMenu() {
           <Typography component="span">Seleziona prodotti</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <form>
-            <InputLabel id="demo-select-small-label">Prodotti</InputLabel>
-            <Select
-            className="select-accordion"
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              value=""
-            >
-              {drink.map((element) => (
-                <MenuItem value={element.id_prodotto}>{element.nome}</MenuItem>
-              ))}
-            </Select>
-            <Button type="submit" className="submit-accordion">Inserisci</Button>
-          </form>
-          <TableAccordion element={drink}></TableAccordion>
+          <FormAccordion
+            elements={drink}
+            productSelected={formData.productSelected}
+            setProductSelected={(value) =>
+              setFormData((prev) => ({ ...prev, productSelected: value }))
+            }
+            note={formData.note}
+            setNote={(value) =>
+              setFormData((prev) => ({ ...prev, note: value }))
+            }
+            categoria = "bar"
+            onSubmit = {(e)=>handleSubmit(e,"bar")}
+          ></FormAccordion>
+          <TableAccordion element={barMenu}></TableAccordion>
         </AccordionDetails>
       </Accordion>
       <p className="title-menu">Panini</p>

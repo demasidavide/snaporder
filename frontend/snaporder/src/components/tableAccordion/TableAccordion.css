@@ -1,12 +1,2 @@
 @import "../../variables/variables.css";
 
-.select-accordion{
-    width: 60%;
-}
-.submit-accordion{
-    padding:10px;
-    border:solid 1px var(--confirm);
-    color: var(--confirm);
-    font-size: bold;
-    margin-left: 10px;
-}

@@ -1,4 +1,4 @@
-import './ModalOrder.css'
+import "./ModalOrder.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -11,18 +11,15 @@ import Select from "@mui/material/Select";
 import axios from "axios";
 import { useState } from "react";
 
-function ModalOrder({ open, onClose }){
+function ModalOrder({ open, onClose }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("ciao");
+  };
 
-
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        console.log("ciao")
-
-    }
-
-    return(
-        <>
-        <Dialog open={open} onClose={onClose}>
+  return (
+    <>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>Aggiungi </DialogTitle>
         <DialogContent>
           <form id="subscription-form" onSubmit={handleSubmit}>
@@ -37,7 +34,7 @@ function ModalOrder({ open, onClose }){
               fullWidth
               variant="standard"
               value={""}
-              onChange={(e)=>setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
             <label className="label-number">Persone</label>
             <input
@@ -46,8 +43,8 @@ function ModalOrder({ open, onClose }){
               min={1}
               max={20}
               defaultValue={1}
-              value={""}  
-  onChange={(e) => setNumPosti(e.target.value)}
+              value={""}
+              onChange={(e) => setNumPosti(e.target.value)}
             ></input>
             <InputLabel id="demo-simple-select-label">Posizione</InputLabel>
             <Select
@@ -56,7 +53,7 @@ function ModalOrder({ open, onClose }){
               id="demo-simple-select"
               value={""}
               label="Age"
-              onChange={(e)=>setPosition(e.target.value)}
+              onChange={(e) => setPosition(e.target.value)}
             >
               <MenuItem sx={{ color: "blue" }} value={"sotto"}>
                 Sotto
@@ -77,7 +74,7 @@ function ModalOrder({ open, onClose }){
           </form>
         </DialogContent>
       </Dialog>
-        </>
-    )
+    </>
+  );
 }
 export default ModalOrder;

@@ -75,7 +75,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Errore nel Database" });
   }
 });
-//Delete per modifica-------------------------------------------------------
+//DELETE -------------------------------------------------------
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {

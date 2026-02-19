@@ -12,6 +12,7 @@ const scontriniRouter = require('./routes/scontrini.js');
 const authRouter = require('./routes/auth.js');
 const adminRouter = require('./routes/admin.js');
 const mailRoutes = require('./routes/mail.js');
+const menuGiornoRoutes = require('./routes/menuGiorno.js');
 
 app.use('/ordinazioni',ordinazioniRouter);
 app.use('/prodotti',prodottiRouter);
@@ -20,5 +21,6 @@ app.use('/scontrini',scontriniRouter);
 app.use('/auth',authRouter);
 app.use('/admin',adminRouter);
 app.use('/mail', mailRoutes);
+app.use('/menu', menuGiornoRoutes);
 
 app.listen(3000, () => console.log("server partito su porta 3000"));
