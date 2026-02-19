@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import DeleteIcon from "@mui/icons-material/Delete";
 
 
-export function TableAccordion({element, onDelete, categoria}) {
+export function TableAccordion({element, onDelete}) {
     return(
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 250 }} size="small" aria-label="a dense table">
@@ -23,7 +23,7 @@ export function TableAccordion({element, onDelete, categoria}) {
         <TableBody>
           {element.map((row) => (
             <TableRow
-              key={row.id_prodotto}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">

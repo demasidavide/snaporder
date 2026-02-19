@@ -13,13 +13,14 @@ export function FormAccordion({
   note,
   setNote,
   categoria,
-  onSubmit
+  onSubmit,
 }) {
   return (
     <>
       <form className="form-accordion" onSubmit={onSubmit}>
         <InputLabel id="demo-select-small-label">Seleziona</InputLabel>
         <Select
+          required
           className="select-accordion"
           labelId="demo-select-small-label"
           id="demo-select-small"
@@ -33,6 +34,7 @@ export function FormAccordion({
           ))}
         </Select>
         <TextField
+          required
           placeholder="Inserisci descrizione"
           className="text-accordion"
           value={note}

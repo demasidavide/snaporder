@@ -1,5 +1,5 @@
 import "./CreateMenu.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -22,6 +22,7 @@ export default function CreateMenu() {
     productSelected: "",
     note: "",
   });
+  const [ idToDelete, setIdToDelete ] = useState();
   const { alertConfirm, setAlertConfirm, handleAlertConfirm } =
     useAlertConfirm();
   const { alertError, setAlertError, handleAlertError } = useAlertError();
@@ -30,6 +31,33 @@ export default function CreateMenu() {
   //filtro i prodotti per categoria per generare le tabelle
   const barMenu = menuProducts.filter(p=>p.categoria === 'bar');
 
+  useEffect(()=>{
+    loadMenu();
+  },[]);
+  
+  const loadMenu = async()=>{
+    try{
+      const res = await axios.get("http://127.0.0.1:3000/menu");
+      console.log(res.data)
+      setMenuProducts(res.data)
+    }catch(error){
+      console.error("Impossibile caricare menu",error)
+    }
+  } 
+    
+  const handleDelete = async(id_prodotto)=>{
+    console.log(id_prodotto);
+try {
+    await axios.delete(`http://127.0.0.1:3000/menu/${id_prodotto}`);
+    // Ricarica il menu
+    loadMenu();
+    handleAlertConfirm("Prodotto eliminato dal menù");
+  } catch(error) {
+    handleAlertError("Impossibile eliminare il prodotto");
+  }
+}
+  
+    
     const handleSubmit = async(e,categoria)=>{
       e.preventDefault();
       try{
@@ -87,7 +115,10 @@ export default function CreateMenu() {
             categoria = "bar"
             onSubmit = {(e)=>handleSubmit(e,"bar")}
           ></FormAccordion>
-          <TableAccordion element={barMenu}></TableAccordion>
+          <TableAccordion 
+          element={barMenu}
+          onDelete={handleDelete}>
+          </TableAccordion>
         </AccordionDetails>
       </Accordion>
       <p className="title-menu">Panini</p>
